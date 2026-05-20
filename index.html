@@ -1,1 +1,635 @@
-我爱你 李咏琳
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>致李咏琳 · 星河万里只为你</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Quicksand:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: radial-gradient(ellipse at center, #0c0f2c 0%, #02020b 100%);
+            font-family: 'Quicksand', 'Segoe UI', sans-serif;
+        }
+
+        /* 画布层：星空、花瓣、光晕 */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 1;
+        }
+
+        /* 主告白卡片 */
+        .confession-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 30;
+            text-align: center;
+            background: rgba(15, 12, 35, 0.55);
+            backdrop-filter: blur(16px);
+            border-radius: 70px;
+            padding: 2rem 2rem;
+            border: 1px solid rgba(255, 180, 200, 0.7);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.4), 0 0 60px rgba(255, 105, 180, 0.5);
+            animation: cardFloat 4s ease-in-out infinite;
+            width: 88%;
+            max-width: 620px;
+            transition: all 0.4s;
+        }
+
+        @keyframes cardFloat {
+            0% { transform: translate(-50%, -50%) translateY(0px); }
+            50% { transform: translate(-50%, -50%) translateY(-12px); }
+            100% { transform: translate(-50%, -50%) translateY(0px); }
+        }
+
+        .greeting {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #ffe0ec;
+            text-shadow: 0 0 10px #ff88bb;
+            letter-spacing: 2px;
+        }
+
+        .name-highlight {
+            font-size: 3.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFDAE5, #FFB0CA, #FF88B0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin: 20px 0 15px;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(255, 80, 120, 0.4);
+        }
+
+        .message-poem {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 1rem 0;
+            font-weight: 400;
+            color: #fff5f8;
+            background: rgba(0,0,0,0.2);
+            border-radius: 48px;
+            padding: 12px 18px;
+            backdrop-filter: blur(4px);
+        }
+
+        .romance-btn {
+            background: linear-gradient(145deg, #ff4d6d, #ff8caa);
+            border: none;
+            margin-top: 20px;
+            padding: 12px 36px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+            border-radius: 60px;
+            cursor: pointer;
+            box-shadow: 0 5px 25px rgba(255, 70, 100, 0.6);
+            transition: 0.3s;
+            font-family: 'Quicksand', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .romance-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(145deg, #ff2f55, #ff6b8f);
+            box-shadow: 0 0 25px #ff4d6d;
+        }
+
+        .signature-area {
+            margin-top: 28px;
+            font-size: 0.85rem;
+            opacity: 0.85;
+            font-family: 'Dancing Script', cursive;
+            letter-spacing: 1px;
+            border-top: 1px dashed rgba(255,200,220,0.4);
+            padding-top: 12px;
+            display: inline-block;
+            width: auto;
+        }
+
+        .final-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ffbfd5;
+            text-shadow: 0 0 6px #ff6699;
+            margin-top: 6px;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 600px) {
+            .confession-card { padding: 1.4rem 1.2rem; width: 92%; }
+            .name-highlight { font-size: 2.5rem; }
+            .message-poem { font-size: 0.95rem; }
+            .romance-btn { padding: 8px 24px; font-size: 1.1rem; }
+            .greeting { font-size: 1.4rem; }
+            .final-name { font-size: 1.2rem; }
+        }
+
+        /* 鼠标跟随爱心特效 */
+        .floating-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 200;
+            font-size: 20px;
+            opacity: 0.8;
+            transition: transform 1s ease, opacity 1s ease;
+        }
+        
+        /* 右下角永恒印记 */
+        .corner-love {
+            position: absolute;
+            bottom: 18px;
+            right: 20px;
+            z-index: 40;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1rem;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(8px);
+            padding: 5px 14px;
+            border-radius: 40px;
+            color: #ffccdd;
+        }
+    </style>
+</head>
+<body>
+
+<div class="confession-card" id="card">
+    <div class="greeting">✨ 致我心中最亮的星辰 ✨</div>
+    <div class="name-highlight">李咏琳</div>
+    <div class="message-poem">
+        从遇见你的那天起，<br>
+        风很温柔，花很浪漫，而你胜却人间无数。<br>
+        想把世间所有心动都攒起来给你，<br>
+        我的每一个未来，都写满了你的名字。
+    </div>
+    <button class="romance-btn" id="confessBtn">💖 倾听我的心意 💖</button>
+    <div class="signature-area">
+        <div>✨ 愿岁月温柔，与你共白首 ✨</div>
+        <div class="final-name" id="finalNameReveal">—— 雷杰楠</div>
+    </div>
+</div>
+<div class="corner-love">❤️  forever & always  ❤️</div>
+
+<canvas id="bgCanvas"></canvas>
+<canvas id="petalCanvas"></canvas>
+
+<script>
+    (function() {
+        // ======================= 极致浪漫告白 · 李咏琳 · 雷杰楠 =======================
+        const bgCanvas = document.getElementById('bgCanvas');
+        const ctxBg = bgCanvas.getContext('2d');
+        const petalCanvas = document.getElementById('petalCanvas');
+        const ctxPetal = petalCanvas.getContext('2d');
+        let width, height;
+        
+        // ---------- 星辰银河 + 流星 ----------
+        let stars = [];
+        const STAR_COUNT = 380;
+        let meteors = [];
+        
+        function initStars() {
+            for(let i=0; i<STAR_COUNT; i++) {
+                stars.push({
+                    x: Math.random(),
+                    y: Math.random(),
+                    radius: 1.2 + Math.random() * 2.5,
+                    alpha: 0.4 + Math.random() * 0.6,
+                    twinkleSpeed: 0.005 + Math.random() * 0.025,
+                    phase: Math.random() * Math.PI * 2,
+                    color: `hsl(${45 + Math.random() * 35}, 85%, 70%)`
+                });
+            }
+        }
+        
+        class Meteor {
+            constructor() {
+                this.active = true;
+                this.x = Math.random();
+                this.y = Math.random() * 0.5;
+                this.speedX = 0.012 + Math.random() * 0.018;
+                this.speedY = 0.005 + Math.random() * 0.01;
+                this.len = 0.07 + Math.random() * 0.09;
+                this.alpha = 0.9;
+                this.color = `hsl(${30 + Math.random() * 40}, 100%, 70%)`;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.alpha -= 0.02;
+                if(this.x > 1.2 || this.y > 1.1 || this.alpha <= 0) this.active = false;
+            }
+            draw(ctx, w, h) {
+                if(!this.active) return;
+                const sx = this.x * w;
+                const sy = this.y * h;
+                const ex = (this.x - this.len) * w;
+                const ey = (this.y - this.len * 0.7) * h;
+                const grad = ctx.createLinearGradient(sx, sy, ex, ey);
+                grad.addColorStop(0, this.color);
+                grad.addColorStop(1, 'rgba(255,180,100,0)');
+                ctx.beginPath();
+                ctx.moveTo(sx, sy);
+                ctx.lineTo(ex, ey);
+                ctx.lineWidth = 2.2;
+                ctx.strokeStyle = grad;
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(sx, sy, 2.2, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(255,210,150,0.8)`;
+                ctx.fill();
+            }
+        }
+        
+        let meteorCounter = 0;
+        function spawnMeteor() {
+            if(meteors.length < 4 && Math.random() < 0.35) meteors.push(new Meteor());
+        }
+        
+        // 温柔极光粒子
+        let auroras = [];
+        for(let i=0;i<90;i++) {
+            auroras.push({
+                x: Math.random(),
+                y: Math.random() * 0.7,
+                rad: 4 + Math.random() * 12,
+                alpha: 0.1 + Math.random() * 0.3,
+                move: 0.001 + Math.random() * 0.006,
+                dir: Math.random() > 0.5 ? 1 : -1,
+            });
+        }
+        
+        function drawAurora(ctx, w, h) {
+            for(let a of auroras) {
+                a.x += a.dir * a.move;
+                if(a.x > 1) a.x = 0;
+                if(a.x < 0) a.x = 1;
+                ctx.beginPath();
+                ctx.arc(a.x * w, a.y * h, a.rad, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(180, 140, 255, ${a.alpha * 0.5})`;
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(a.x * w + 6, a.y * h - 4, a.rad*0.7, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(255, 160, 210, ${a.alpha * 0.4})`;
+                ctx.fill();
+            }
+        }
+        
+        function drawStarsAndSky(now) {
+            if(!ctxBg) return;
+            ctxBg.clearRect(0,0,width,height);
+            ctxBg.fillStyle = "#02020b";
+            ctxBg.fillRect(0,0,width,height);
+            // 银河光晕
+            let grad = ctxBg.createLinearGradient(0,0,width,height*0.6);
+            grad.addColorStop(0, "rgba(20,12,48,0.7)");
+            grad.addColorStop(1, "rgba(5,5,30,0.9)");
+            ctxBg.fillStyle = grad;
+            ctxBg.fillRect(0,0,width,height);
+            drawAurora(ctxBg, width, height);
+            
+            for(let s of stars) {
+                let bright = 0.55 + 0.45 * Math.sin(now * s.twinkleSpeed + s.phase);
+                let alphaVal = s.alpha * bright;
+                ctxBg.beginPath();
+                ctxBg.arc(s.x * width, s.y * height, s.radius, 0, Math.PI*2);
+                ctxBg.fillStyle = `rgba(255, 240, 210, ${alphaVal})`;
+                ctxBg.fill();
+                if(bright > 0.85) {
+                    ctxBg.shadowBlur = 12;
+                    ctxBg.shadowColor = "#ffccaa";
+                    ctxBg.fill();
+                    ctxBg.shadowBlur = 0;
+                }
+            }
+            // 流星
+            for(let i=0; i<meteors.length; i++) {
+                meteors[i].update();
+                meteors[i].draw(ctxBg, width, height);
+                if(!meteors[i].active) meteors.splice(i,1), i--;
+            }
+            spawnMeteor();
+            if(Math.random()<0.025) spawnMeteor();
+            requestAnimationFrame((t) => drawStarsAndSky(t/1000));
+        }
+        
+        // ---------- 玫瑰花雨 + 爱心花瓣 (增加浪漫氛围) ----------
+        let petals = [];
+        const PETAL_NUM = 110;
+        
+        class RomanticPetal {
+            constructor() {
+                this.x = Math.random();
+                this.y = Math.random() * 1.2 - 0.2;
+                this.size = 7 + Math.random() * 14;
+                this.speedY = 0.002 + Math.random() * 0.007;
+                this.speedX = (Math.random() - 0.5) * 0.0025;
+                this.angle = Math.random() * Math.PI * 2;
+                this.rotSpeed = 0.01 + Math.random() * 0.025;
+                this.color = `hsl(${330 + Math.random() * 35}, 85%, 68%)`;
+                this.isHeart = Math.random() > 0.65;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.angle += this.rotSpeed;
+                if(this.y > 1.2) {
+                    this.y = -0.1;
+                    this.x = Math.random();
+                }
+                if(this.x > 1.1) this.x = -0.1;
+                if(this.x < -0.1) this.x = 1.1;
+            }
+            draw(ctx, w, h) {
+                const cx = this.x * w;
+                const cy = this.y * h;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(this.angle);
+                ctx.shadowBlur = 6;
+                ctx.shadowColor = "rgba(255,80,120,0.6)";
+                if(this.isHeart) {
+                    ctx.beginPath();
+                    const s = this.size * 0.7;
+                    ctx.moveTo(0, s*0.3);
+                    ctx.bezierCurveTo(0, -s*0.4, -s*0.6, -s*0.7, -s*0.3, -s*0.2);
+                    ctx.bezierCurveTo(-s*0.6, s*0.2, 0, s*0.8, 0, s*0.8);
+                    ctx.bezierCurveTo(0, s*0.8, s*0.6, s*0.2, s*0.3, -s*0.2);
+                    ctx.bezierCurveTo(s*0.6, -s*0.7, 0, -s*0.4, 0, s*0.3);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                } else {
+                    ctx.beginPath();
+                    for(let ang=0; ang<=Math.PI*2; ang+=0.45) {
+                        let r = this.size * 0.45 * (1 + 0.2*Math.sin(ang*3));
+                        let xp = r * Math.cos(ang);
+                        let yp = r * Math.sin(ang);
+                        if(ang===0) ctx.moveTo(xp, yp);
+                        else ctx.lineTo(xp, yp);
+                    }
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+        
+        function initPetals() {
+            for(let i=0; i<PETAL_NUM; i++) petals.push(new RomanticPetal());
+        }
+        
+        function drawPetalsFlow() {
+            ctxPetal.clearRect(0,0,width,height);
+            for(let p of petals) {
+                p.update();
+                p.draw(ctxPetal, width, height);
+            }
+            ctxPetal.globalCompositeOperation = 'lighter';
+            for(let i=0;i<20;i++) {
+                ctxPetal.beginPath();
+                ctxPetal.arc((Math.sin(Date.now()*0.0012 + i)*25 + width*0.7 + i*40)%width, height - 30 + Math.sin(i)*10, 5, 0, Math.PI*2);
+                ctxPetal.fillStyle = `rgba(255, 110, 150, 0.2)`;
+                ctxPetal.fill();
+            }
+            ctxPetal.globalCompositeOperation = 'source-over';
+            requestAnimationFrame(drawPetalsFlow);
+        }
+        
+        // ---------- 萤火星光粒子 ----------
+        let fireflies = [];
+        const FIREFLY_COUNT = 80;
+        class FireflyGlow {
+            constructor() {
+                this.x = Math.random();
+                this.y = Math.random();
+                this.size = 2 + Math.random() * 4;
+                this.vx = (Math.random() - 0.5)*0.003;
+                this.vy = (Math.random() - 0.5)*0.002;
+                this.alpha = 0.5 + Math.random()*0.5;
+                this.pulse = Math.random() * Math.PI*2;
+                this.speedPulse = 0.03 + Math.random()*0.06;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.pulse += this.speedPulse;
+                if(this.x < 0) this.x = 1;
+                if(this.x > 1) this.x = 0;
+                if(this.y < 0) this.y = 1;
+                if(this.y > 1) this.y = 0;
+                this.alpha = 0.5 + Math.sin(this.pulse)*0.4;
+            }
+            draw(ctx, w, h) {
+                const cx = this.x * w;
+                const cy = this.y * h;
+                const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, this.size*2);
+                grad.addColorStop(0, `rgba(255, 220, 150, ${this.alpha*0.9})`);
+                grad.addColorStop(1, `rgba(255, 100, 130, 0)`);
+                ctx.beginPath();
+                ctx.arc(cx, cy, this.size*1.3, 0, Math.PI*2);
+                ctx.fillStyle = grad;
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(cx, cy, this.size*0.7, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(255, 210, 170, ${this.alpha})`;
+                ctx.fill();
+            }
+        }
+        
+        function initFireflies() {
+            for(let i=0;i<FIREFLY_COUNT;i++) fireflies.push(new FireflyGlow());
+        }
+        
+        let glowCanvas = document.createElement('canvas');
+        glowCanvas.style.position = 'fixed';
+        glowCanvas.style.top = '0';
+        glowCanvas.style.left = '0';
+        glowCanvas.style.pointerEvents = 'none';
+        glowCanvas.style.zIndex = '15';
+        document.body.appendChild(glowCanvas);
+        const ctxGlow = glowCanvas.getContext('2d');
+        
+        function drawGlowLayer() {
+            ctxGlow.clearRect(0,0,width,height);
+            for(let f of fireflies) {
+                f.update();
+                f.draw(ctxGlow, width, height);
+            }
+            requestAnimationFrame(drawGlowLayer);
+        }
+        
+        // 互动：告白按钮触发漫天花雨 + 浪漫文字 凸显“雷杰楠”
+        const btn = document.getElementById('confessBtn');
+        const finalNameSpan = document.getElementById('finalNameReveal');
+        
+        btn.addEventListener('click', () => {
+            // 绽放花瓣海量
+            for(let i=0;i<45;i++) {
+                setTimeout(() => {
+                    let newPetal = new RomanticPetal();
+                    newPetal.y = 0.75;
+                    newPetal.x = Math.random();
+                    petals.push(newPetal);
+                    setTimeout(() => {
+                        const idx = petals.indexOf(newPetal);
+                        if(idx !== -1) petals.splice(idx,1);
+                    }, 5000);
+                }, i*60);
+            }
+            // 闪烁心意 + 强调雷杰楠
+            const loveMsg = document.createElement('div');
+            loveMsg.innerText = '💗 咏琳，我爱你 💗';
+            loveMsg.style.position = 'fixed';
+            loveMsg.style.top = '35%';
+            loveMsg.style.left = '50%';
+            loveMsg.style.transform = 'translateX(-50%)';
+            loveMsg.style.fontSize = '2rem';
+            loveMsg.style.fontWeight = 'bold';
+            loveMsg.style.color = '#FFB7C5';
+            loveMsg.style.background = 'rgba(0,0,0,0.5)';
+            loveMsg.style.backdropFilter = 'blur(12px)';
+            loveMsg.style.padding = '12px 24px';
+            loveMsg.style.borderRadius = '60px';
+            loveMsg.style.zIndex = '100';
+            loveMsg.style.whiteSpace = 'nowrap';
+            loveMsg.style.fontFamily = 'Dancing Script, cursive';
+            loveMsg.style.boxShadow = '0 0 30px #ff88aa';
+            document.body.appendChild(loveMsg);
+            setTimeout(() => {
+                loveMsg.style.opacity = '0';
+                loveMsg.style.transform = 'translateX(-50%) translateY(-60px)';
+                setTimeout(() => loveMsg.remove(), 1200);
+            }, 2000);
+            
+            // 加一层光晕闪烁，展示雷杰楠名字闪耀
+            finalNameSpan.style.animation = 'glowName 0.9s 3';
+            const styleSheet = document.createElement("style");
+            styleSheet.textContent = `@keyframes glowName { 0% { text-shadow: 0 0 0px #ff99bb; } 50% { text-shadow: 0 0 20px #ff4d6d, 0 0 8px #ff99bb; } 100% { text-shadow: 0 0 0px #ff99bb; } }`;
+            document.head.appendChild(styleSheet);
+            
+            // 额外弹出「雷杰楠 ❤️ 李咏琳」的签名飘浮
+            const coupleMsg = document.createElement('div');
+            coupleMsg.innerText = '✨ 雷杰楠 ✨  &  ❤️ 李咏琳 ❤️';
+            coupleMsg.style.position = 'fixed';
+            coupleMsg.style.bottom = '25%';
+            coupleMsg.style.left = '50%';
+            coupleMsg.style.transform = 'translateX(-50%)';
+            coupleMsg.style.fontSize = '1.5rem';
+            coupleMsg.style.fontWeight = 'bold';
+            coupleMsg.style.background = 'rgba(0,0,0,0.5)';
+            coupleMsg.style.padding = '8px 25px';
+            coupleMsg.style.borderRadius = '50px';
+            coupleMsg.style.color = '#ffc0e0';
+            coupleMsg.style.fontFamily = 'Dancing Script, cursive';
+            coupleMsg.style.backdropFilter = 'blur(8px)';
+            coupleMsg.style.zIndex = '101';
+            coupleMsg.style.whiteSpace = 'nowrap';
+            document.body.appendChild(coupleMsg);
+            setTimeout(() => {
+                coupleMsg.style.transition = 'all 2s';
+                coupleMsg.style.opacity = '0';
+                coupleMsg.style.transform = 'translateX(-50%) translateY(-80px)';
+                setTimeout(() => coupleMsg.remove(), 2000);
+            }, 2800);
+            
+            // 鼠标洒落心形持续特效
+            for(let s=0; s<18; s++) {
+                let randHeart = document.createElement('div');
+                randHeart.innerHTML = ['❤️','💖','💗','🌸','✨','🌹'][Math.floor(Math.random()*6)];
+                randHeart.style.position = 'fixed';
+                randHeart.style.left = Math.random() * 90 + 5 + '%';
+                randHeart.style.top = '70%';
+                randHeart.style.fontSize = (24 + Math.random()*28) + 'px';
+                randHeart.style.opacity = '0.9';
+                randHeart.style.pointerEvents = 'none';
+                randHeart.style.zIndex = '150';
+                randHeart.style.transition = 'all 1.5s ease-out';
+                document.body.appendChild(randHeart);
+                setTimeout(() => {
+                    randHeart.style.transform = `translateY(-${120 + Math.random() * 200}px) scale(1.3)`;
+                    randHeart.style.opacity = '0';
+                    setTimeout(() => randHeart.remove(), 1500);
+                }, 10);
+            }
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => btn.style.transform = '', 180);
+        });
+        
+        // 鼠标移动撒小心心 (浪漫氛围)
+        document.addEventListener('mousemove', (e) => {
+            if(Math.random() < 0.25) {
+                let tinyHeart = document.createElement('div');
+                tinyHeart.innerHTML = '❤️';
+                tinyHeart.style.position = 'fixed';
+                tinyHeart.style.left = e.clientX - 8 + 'px';
+                tinyHeart.style.top = e.clientY - 8 + 'px';
+                tinyHeart.style.fontSize = '16px';
+                tinyHeart.style.pointerEvents = 'none';
+                tinyHeart.style.opacity = '0.7';
+                tinyHeart.style.zIndex = '200';
+                tinyHeart.style.transition = 'all 0.9s ease';
+                document.body.appendChild(tinyHeart);
+                setTimeout(() => {
+                    tinyHeart.style.opacity = '0';
+                    tinyHeart.style.transform = 'translateY(-28px) scale(1.5)';
+                    setTimeout(() => tinyHeart.remove(), 800);
+                }, 50);
+            }
+        });
+        
+        function resizeAll() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            bgCanvas.width = width;
+            bgCanvas.height = height;
+            petalCanvas.width = width;
+            petalCanvas.height = height;
+            glowCanvas.width = width;
+            glowCanvas.height = height;
+        }
+        
+        window.addEventListener('resize', () => {
+            resizeAll();
+        });
+        
+        resizeAll();
+        initStars();
+        initPetals();
+        initFireflies();
+        drawStarsAndSky(0);
+        drawPetalsFlow();
+        drawGlowLayer();
+        
+        // 页面加载完毕时显示温柔致意
+        console.log("%c✨ 李咏琳，遇见你是我一生的浪漫 ✨ —— 雷杰楠", "color:#ff9ebb; font-size:16px; font-weight:bold;");
+        
+        // 额外让名字雷杰楠慢慢发光
+        setInterval(() => {
+            if(Math.random()<0.3) {
+                finalNameSpan.style.transition = '0.3s';
+                finalNameSpan.style.textShadow = '0 0 8px #ff88aa';
+                setTimeout(() => finalNameSpan.style.textShadow = '', 600);
+            }
+        }, 2000);
+        
+    })();
+</script>
+</body>
+</html>
