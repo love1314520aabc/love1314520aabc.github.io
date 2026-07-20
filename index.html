@@ -1,10 +1,42 @@
 <!DOCTYPE html>
 <html>
+<head>
+<meta charset="UTF-8">
+<title>我的照片墙</title>
+
+<style>
+img {
+    width:300px;
+    margin:10px;
+    border-radius:10px;
+}
+</style>
+
+</head>
+
 <body>
-    <h1>我的照片墙</h1>
-    <div style="display: flex; gap: 20px;">
-        <img src="image.png" alt="图片1" style="width: 50%;">
-        <img src="d47c575d-d2d3-45c1-8cd2-68d396eff942.png" alt="图片2" style="width: 50%;">
-    </div>
+
+<h1>我的照片</h1>
+
+<div id="box"></div>
+
+
+<script>
+
+let photos=[
+"001.jpg",
+"002.jpg",
+"003.jpg"
+];
+
+let box=document.getElementById("box");
+
+photos.forEach(p=>{
+    box.innerHTML += `<img src="photos/${p}">`;
+});
+
+</script>
+
+
 </body>
 </html>
