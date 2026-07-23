@@ -1,260 +1,126 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <title>我们的回忆相册</title>
+    <style>
+        body {
+            margin: 0;
+            background: #fff5f7;
+            font-family: "Microsoft YaHei", Arial;
+            text-align: center;
+        }
 
-<meta charset="UTF-8">
+        h1 {
+            margin-top: 40px;
+            color: #ff6699;
+        }
 
-<title>我们的回忆相册</title>
+        .desc {
+            color: #888;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
 
+        #box {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+        }
 
-<style>
+        .photo {
+            width: 280px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            transition: 0.3s;
+        }
 
-body{
-    margin:0;
-    background:#fff5f7;
-    font-family:"Microsoft YaHei",Arial;
-    text-align:center;
-}
+        .photo:hover {
+            transform: scale(1.05);
+        }
 
+        .viewer {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            cursor: pointer;
+        }
 
-/* 标题 */
+        .viewer img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 15px;
+        }
 
-h1{
-    margin-top:40px;
-    color:#ff6699;
-}
-
-
-.desc{
-    color:#888;
-    font-size:16px;
-    margin-bottom:30px;
-}
-
-
-
-/* 照片墙 */
-
-#box{
-
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:20px;
-
-}
-
-
-.photo{
-
-    width:280px;
-    height:280px;
-
-    object-fit:cover;
-
-    border-radius:15px;
-
-    cursor:pointer;
-
-    box-shadow:0 5px 15px rgba(0,0,0,0.15);
-
-    transition:0.3s;
-
-}
-
-
-
-.photo:hover{
-
-    transform:scale(1.05);
-
-}
-
-
-
-
-/* 查看大图 */
-
-.viewer{
-
-    display:none;
-
-    position:fixed;
-
-    left:0;
-    top:0;
-
-    width:100%;
-    height:100%;
-
-    background:rgba(0,0,0,0.85);
-
-    justify-content:center;
-
-    align-items:center;
-
-    z-index:999;
-
-}
-
-
-
-.viewer img{
-
-    max-width:90%;
-
-    max-height:90%;
-
-    border-radius:15px;
-
-}
-
-
-
-.footer{
-
-    margin:50px 0;
-
-    color:#999;
-
-}
-
-
-</style>
-
-
+        .footer {
+            margin: 50px 0;
+            color: #999;
+        }
+    </style>
 </head>
-
-
-
 <body>
 
-
-
-<h1>❤️ 我们的回忆相册 ❤️</h1>
-
-
-<div class="desc">
-
-每一张照片视频，都是值得珍藏的回忆。
-
-</div>
-
-
-
-<div id="box"></div>
-
-
-
-
-<!-- 大图弹窗 -->
-
-<div class="viewer" id="viewer" onclick="closePhoto()">
-
-<img id="bigPhoto">
-
-</div>
-
-
-
-
-
-<script>
-
-
-let photos=[
-
-"001.jpg",
-
-"002.jpg",
-
-"003.jpg",
-
-"004.jpg",
-
-"005.jpg",
-
-"006.jpg"，
-
-"007.jpg"，
-
-"008.jpg"，
-
-"009.jpg"，
-
-"010.jpg"， 
-
-"011.jpg"， 
-
-"012.jpg"， 
-    
-];
-
-
-
-let box=document.getElementById("box");
-
-
-
-photos.forEach(p=>{
-
-
-box.innerHTML +=
-
-`
-
-<img class="photo" 
-
-src="photos/${p}" 
-
-onclick="openPhoto(this.src)">
-
-`;
-
-
-});
-
-
-
-
-
-function openPhoto(src){
-
-
-document.getElementById("viewer").style.display="flex";
-
-
-document.getElementById("bigPhoto").src=src;
-
-
-}
-
-
-
-
-function closePhoto(){
-
-
-document.getElementById("viewer").style.display="none";
-
-
-}
-
-
-
-</script>
-
-
-
-
-<div class="footer">
-
-💕 永远珍藏我们的美好时光 💕
-
-</div>
-
-
+    <h1>❤️ 我们的回忆相册 ❤️</h1>
+    <div class="desc">每一张照片视频，都是值得珍藏的回忆。</div>
+
+    <div id="box"></div>
+
+    <!-- 大图弹窗 -->
+    <div class="viewer" id="viewer" onclick="closePhoto()">
+        <img id="bigPhoto" alt="放大图片">
+    </div>
+
+    <div class="footer">💕 永远珍藏我们的美好时光 💕</div>
+
+    <script>
+        // 照片列表（注意：所有图片必须放在 photos 文件夹内）
+        let photos = [
+            "001.jpg",
+            "002.jpg",
+            "003.jpg",
+            "004.jpg",
+            "005.jpg",
+            "006.jpg",
+            "007.jpg",
+            "008.jpg",
+            "009.jpg",
+            "010.jpg",
+            "011.jpg",
+            "012.jpg"
+        ];
+
+        let box = document.getElementById("box");
+
+        photos.forEach(p => {
+            box.innerHTML += `
+                <img class="photo" 
+                     src="photos/${p}" 
+                     alt="回忆照片"
+                     onclick="openPhoto(this.src)">
+            `;
+        });
+
+        function openPhoto(src) {
+            document.getElementById("viewer").style.display = "flex";
+            document.getElementById("bigPhoto").src = src;
+        }
+
+        function closePhoto() {
+            document.getElementById("viewer").style.display = "none";
+        }
+    </script>
 
 </body>
-
 </html>
