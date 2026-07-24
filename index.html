@@ -53,7 +53,6 @@
             object-fit: cover;
             display: block;
         }
-        /* 只保留描述，标题已删除 */
         .gallery-item .desc {
             padding: 10px 12px;
             font-size: 1em;
@@ -260,7 +259,6 @@
             <button class="nav-btn next-btn" id="nextBtn">›</button>
 
             <img id="viewer-img" src="" alt="查看大图" />
-            <!-- 只显示描述，没有标题 -->
             <div class="viewer-caption" id="viewer-caption">
                 <span id="caption-desc">描述文字</span>
             </div>
@@ -271,12 +269,12 @@
     <script>
         // ================================================================
         // 1. 配置区 - 共16张照片（001.jpg ~ 016.jpg）
-        //    你只需要修改 desc（描述）字段，title 已不再显示
+        // 你想让某张不显示文字，就把 desc 设为 ''（空字符串）
         // ================================================================
         const photoData = [
-            { src: '001.jpg', title: '', desc: '这是第一张照片的描述' },
-            { src: '002.jpg', title: '', desc: '你可以在这里写任意文字' },
-            { src: '003.jpg', title: '', desc: '支持 Emoji 😊' },
+            { src: '001.jpg', title: '', desc: '' },                       // 不显示文字
+            { src: '002.jpg', title: '', desc: '' },                       // 不显示文字
+            { src: '003.jpg', title: '', desc: '支持 Emoji 🎈' },
             { src: '004.jpg', title: '', desc: '记录美好瞬间' },
             { src: '005.jpg', title: '', desc: '每一张都有故事' },
             { src: '006.jpg', title: '', desc: '夕阳无限好' },
@@ -288,8 +286,8 @@
             { src: '012.jpg', title: '', desc: '四季如歌' },
             { src: '013.jpg', title: '', desc: '温暖时光' },
             { src: '014.jpg', title: '', desc: '平淡是真' },
-            { src: '015.jpg', title: '', desc: '未完待续…' },
-            { src: '016.jpg', title: '', desc: '新的开始 ✨' }
+            { src: '015.jpg', title: '', desc: '未完待续...' },
+            { src: '016.jpg', title: '', desc: '新的开始 🎈' }
         ];
 
         // ================================================================
@@ -306,7 +304,7 @@
             img.alt = item.desc || '图片';
             img.loading = 'lazy';
 
-            // 只有描述，没有标题
+            // 描述文字（如果为空，这个div依然存在但无内容，可占位）
             const descSpan = document.createElement('div');
             descSpan.className = 'desc';
             descSpan.textContent = item.desc;
@@ -441,7 +439,7 @@
             isSwiping = false;
         }, { passive: false });
 
-        console.log('✅ 相册已加载，只显示描述文字。');
+        console.log('✅ 相册已加载，共 ' + photoData.length + ' 张照片。');
     </script>
 
 </body>
