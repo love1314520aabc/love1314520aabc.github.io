@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <title>我们的回忆相册</title>
+    <title>曝光培正学院工商转会计李咏琳出轨无缝衔接</title>
     <style>
         /* ---------- 全局 ---------- */
         * {
@@ -82,11 +82,11 @@
             justify-content: center;
             align-items: center;
             user-select: none;
-            /* 不再设置 cursor: pointer，点击背景无反应 */
         }
         .viewer-inner {
             position: relative;
             display: flex;
+            flex-direction: column;        /* 改为纵向排列，图片在上，文字在下 */
             justify-content: center;
             align-items: center;
             width: 100%;
@@ -96,19 +96,16 @@
         }
         .viewer-inner img {
             max-width: 92%;
-            max-height: 92%;
+            max-height: 80%;               /* 图片最多占80%高度，为文字留空间 */
             border-radius: 12px;
             pointer-events: none;
             user-select: none;
             -webkit-user-drag: none;
+            flex-shrink: 0;
         }
 
-        /* 图片下方信息条 */
+        /* 图片下方的描述文字 - 不再覆盖图片，正常流式布局 */
         .viewer-caption {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.6);
             color: #fff;
             padding: 12px 28px;
@@ -119,6 +116,8 @@
             pointer-events: none;
             font-size: 1.5em;
             line-height: 1.5;
+            margin-top: 15px;              /* 与图片保持间距 */
+            flex-shrink: 0;
         }
 
         /* 图片计数 */
@@ -219,7 +218,7 @@
             }
             .gallery-item img { height: 120px; }
             .gallery-item .desc { font-size: 0.75em; padding: 6px 8px; -webkit-line-clamp: 1; }
-            .viewer-caption { font-size: 1.2em; padding: 10px 16px; }
+            .viewer-caption { font-size: 1.2em; padding: 10px 16px; margin-top: 10px; }
             .footer { font-size: 1.2em; }
             h1 { font-size: 2.4em; }
             .close-btn {
@@ -248,7 +247,9 @@
     <div class="gallery" id="gallery"></div>
 
     <!-- 页脚 -->
-    <div class="footer">❤️ 每一张照片，都是时光的礼物</div>
+    <div class="footer">无缝衔接连一句解释说法最后的告别都没有、屡次寻找沟通无果、直接删除拉黑，再拒绝沟通那就找后面那几位沟通一下以及更多人员就不一一展现了</div>
+    <div class="footer">❤️ 每一张照片，都是时光的礼物，Every photo and video captures a precious moment that will be cherished forever. ✨</div>
+    <div class="footer">🎈未完待续，敬请期待"To be continued... Stay tuned!"🎈</div>
 
     <!-- 全屏查看器 -->
     <div class="viewer" id="viewer">
@@ -258,6 +259,7 @@
             <button class="nav-btn next-btn" id="nextBtn">›</button>
 
             <img id="viewer-img" src="" alt="查看大图" />
+            <!-- 描述文字现在放在图片下方，不覆盖图片 -->
             <div class="viewer-caption" id="viewer-caption">
                 <span id="caption-desc">描述文字</span>
             </div>
@@ -273,20 +275,20 @@
         const photoData = [
             { src: '001.jpg', title: '', desc: '' },
             { src: '002.jpg', title: '', desc: '' },
-            { src: '003.jpg', title: '', desc: '支持 Emoji 🎈' },
-            { src: '004.jpg', title: '', desc: '记录美好瞬间' },
-            { src: '005.jpg', title: '', desc: '每一张都有故事' },
-            { src: '006.jpg', title: '', desc: '夕阳无限好' },
-            { src: '007.jpg', title: '', desc: '海边的风' },
-            { src: '008.jpg', title: '', desc: '城市夜景' },
-            { src: '009.jpg', title: '', desc: '一起走过的路' },
-            { src: '010.jpg', title: '', desc: '笑容灿烂' },
-            { src: '011.jpg', title: '', desc: '珍贵的回忆' },
-            { src: '012.jpg', title: '', desc: '四季如歌' },
-            { src: '013.jpg', title: '', desc: '温暖时光' },
-            { src: '014.jpg', title: '', desc: '平淡是真' },
-            { src: '015.jpg', title: '', desc: '未完待续...' },
-            { src: '016.jpg', title: '', desc: '新的开始 🎈' }
+            { src: '003.jpg', title: '', desc: '' },
+            { src: '004.jpg', title: '', desc: '' },
+            { src: '005.jpg', title: '', desc: '' },
+            { src: '006.jpg', title: '', desc: '' },
+            { src: '007.jpg', title: '', desc: '' },
+            { src: '008.jpg', title: '', desc: '' },
+            { src: '009.jpg', title: '', desc: '' },
+            { src: '010.jpg', title: '', desc: '' },
+            { src: '011.jpg', title: '', desc: '' },
+            { src: '012.jpg', title: '', desc: '前面还说着永远只爱你、后面就无缝衔接、真是很随便的人、很恶心很脏' },
+            { src: '013.jpg', title: '', desc: '' },
+            { src: '014.jpg', title: '', desc: '' },
+            { src: '015.jpg', title: '', desc: '' },
+            { src: '016.jpg', title: '', desc: '' }
         ];
 
         // ================================================================
@@ -318,7 +320,7 @@
         });
 
         // ================================================================
-        // 3. 查看器逻辑（关闭背景点击、轻触关闭）
+        // 3. 查看器逻辑（只响应按钮和滑动）
         // ================================================================
         const viewer = document.getElementById('viewer');
         const viewerImg = document.getElementById('viewer-img');
@@ -356,16 +358,13 @@
             isOpen = false;
         }
 
-        // 移除点击黑色背景关闭的监听
-        // viewer 不再监听 click 事件
-
         // 关闭按钮
         document.getElementById('closeBtn').addEventListener('click', function (e) {
             e.stopPropagation();
             closeViewer();
         });
 
-        // 键盘（保留 ESC 关闭，作为辅助）
+        // 键盘
         document.addEventListener('keydown', function (e) {
             if (!isOpen) return;
             if (e.key === 'Escape') {
@@ -392,7 +391,7 @@
 
         // ================================================================
         // 4. 触摸滑动（左滑下一张，右滑上一张）
-        //    删除轻触关闭逻辑
+        // 无轻触关闭
         // ================================================================
         const inner = document.getElementById('viewer-inner');
         let startX = 0, startY = 0, isSwiping = false;
@@ -427,13 +426,12 @@
                 else prevImage();
                 e.preventDefault();
             }
-            // 删除轻触关闭的 else if，现在点击图片或背景不做任何事
             startX = 0;
             startY = 0;
             isSwiping = false;
         }, { passive: false });
 
-        console.log('✅ 相册已加载，查看器仅支持关闭按钮、箭头、滑动切换，点击背景/图片无反应。');
+        console.log('✅ 相册已加载，查看器文字位于图片下方，不覆盖。');
     </script>
 
 </body>
