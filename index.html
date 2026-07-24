@@ -81,8 +81,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
             user-select: none;
+            /* 不再设置 cursor: pointer，点击背景无反应 */
         }
         .viewer-inner {
             position: relative;
@@ -103,7 +103,7 @@
             -webkit-user-drag: none;
         }
 
-        /* 图片下方信息条 - 只显示描述 */
+        /* 图片下方信息条 */
         .viewer-caption {
             position: absolute;
             bottom: 30px;
@@ -207,19 +207,18 @@
         /* ---------- 响应式 ---------- */
         @media (max-width: 700px) {
             .gallery {
-                grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
                 max-width: 100%;
             }
             .gallery-item img { height: 160px; }
+            .gallery-item .desc { font-size: 0.9em; padding: 8px 10px; }
         }
         @media (max-width: 450px) {
             .gallery {
-                grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
             .gallery-item img { height: 120px; }
-            .gallery-item .desc { font-size: 0.8em; padding: 6px 8px; }
+            .gallery-item .desc { font-size: 0.75em; padding: 6px 8px; -webkit-line-clamp: 1; }
             .viewer-caption { font-size: 1.2em; padding: 10px 16px; }
             .footer { font-size: 1.2em; }
             h1 { font-size: 2.4em; }
@@ -272,8 +271,8 @@
         // 你想让某张不显示文字，就把 desc 设为 ''（空字符串）
         // ================================================================
         const photoData = [
-            { src: '001.jpg', title: '', desc: '' },                       // 不显示文字
-            { src: '002.jpg', title: '', desc: '' },                       // 不显示文字
+            { src: '001.jpg', title: '', desc: '' },
+            { src: '002.jpg', title: '', desc: '' },
             { src: '003.jpg', title: '', desc: '支持 Emoji 🎈' },
             { src: '004.jpg', title: '', desc: '记录美好瞬间' },
             { src: '005.jpg', title: '', desc: '每一张都有故事' },
@@ -291,7 +290,7 @@
         ];
 
         // ================================================================
-        // 2. 渲染缩略图（只显示描述）
+        // 2. 渲染缩略图
         // ================================================================
         const gallery = document.getElementById('gallery');
 
@@ -304,7 +303,6 @@
             img.alt = item.desc || '图片';
             img.loading = 'lazy';
 
-            // 描述文字（如果为空，这个div依然存在但无内容，可占位）
             const descSpan = document.createElement('div');
             descSpan.className = 'desc';
             descSpan.textContent = item.desc;
@@ -320,7 +318,7 @@
         });
 
         // ================================================================
-        // 3. 查看器逻辑
+        // 3. 查看器逻辑（关闭背景点击、轻触关闭）
         // ================================================================
         const viewer = document.getElementById('viewer');
         const viewerImg = document.getElementById('viewer-img');
@@ -358,12 +356,8 @@
             isOpen = false;
         }
 
-        // 点击黑色背景关闭
-        viewer.addEventListener('click', function (e) {
-            if (e.target === viewer) {
-                closeViewer();
-            }
-        });
+        // 移除点击黑色背景关闭的监听
+        // viewer 不再监听 click 事件
 
         // 关闭按钮
         document.getElementById('closeBtn').addEventListener('click', function (e) {
@@ -371,7 +365,7 @@
             closeViewer();
         });
 
-        // 键盘
+        // 键盘（保留 ESC 关闭，作为辅助）
         document.addEventListener('keydown', function (e) {
             if (!isOpen) return;
             if (e.key === 'Escape') {
@@ -398,6 +392,7 @@
 
         // ================================================================
         // 4. 触摸滑动（左滑下一张，右滑上一张）
+        //    删除轻触关闭逻辑
         // ================================================================
         const inner = document.getElementById('viewer-inner');
         let startX = 0, startY = 0, isSwiping = false;
@@ -431,15 +426,14 @@
                 if (deltaX < 0) nextImage();
                 else prevImage();
                 e.preventDefault();
-            } else if (!isSwiping && Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
-                closeViewer();
             }
+            // 删除轻触关闭的 else if，现在点击图片或背景不做任何事
             startX = 0;
             startY = 0;
             isSwiping = false;
         }, { passive: false });
 
-        console.log('✅ 相册已加载，共 ' + photoData.length + ' 张照片。');
+        console.log('✅ 相册已加载，查看器仅支持关闭按钮、箭头、滑动切换，点击背景/图片无反应。');
     </script>
 
 </body>
