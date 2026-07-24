@@ -25,13 +25,13 @@
             margin: 20px 0 30px;
         }
 
-        /* ---------- 缩略图网格 ---------- */
+        /* ---------- 缩略图网格 - 修改为固定3列 ---------- */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(3, 1fr);   /* 每行3列 */
             gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 900px;                       /* 限制最大宽度，图片不会太宽 */
+            margin: 0 auto;                         /* 居中 */
         }
         .gallery-item {
             text-align: center;
@@ -47,7 +47,7 @@
         }
         .gallery-item img {
             width: 100%;
-            height: 160px;
+            height: 200px;          /* 固定高度，保持整齐 */
             object-fit: cover;
             display: block;
         }
@@ -74,7 +74,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            cursor: pointer; /* 点击背景关闭 */
+            cursor: pointer;
             user-select: none;
         }
         .viewer-inner {
@@ -121,7 +121,7 @@
             opacity: 0.85;
         }
 
-        /* 图片计数（第几张） */
+        /* 图片计数 */
         .counter {
             color: #ccc;
             font-size: 1.4em;
@@ -140,15 +140,20 @@
             margin: 50px 0 20px;
         }
 
-        /* ---------- 响应式 ---------- */
+        /* ---------- 响应式：小屏设备可能显示2列，但尽量保持3列 ---------- */
         @media (max-width: 600px) {
             h1 { font-size: 2.4em; }
-            .gallery { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+            .gallery {
+                grid-template-columns: repeat(3, 1fr); /* 依然3列，但图片会缩小 */
+                gap: 12px;
+                max-width: 100%;
+            }
             .gallery-item img { height: 120px; }
             .viewer-caption .title { font-size: 1.2em; }
             .viewer-caption .desc { font-size: 0.9em; }
             .footer { font-size: 1.2em; }
         }
+        /* 如果屏幕过窄（<400px），可以改为2列，但用户没要求，我们保留3列，但可能会太挤，所以这里不强制 */
     </style>
 </head>
 <body>
@@ -165,7 +170,6 @@
     <div class="viewer" id="viewer">
         <div class="viewer-inner" id="viewer-inner">
             <img id="viewer-img" src="" alt="查看大图" />
-            <!-- 图片描述文字 -->
             <div class="viewer-caption" id="viewer-caption">
                 <div class="title" id="caption-title">标题</div>
                 <div class="desc" id="caption-desc">描述</div>
@@ -219,7 +223,6 @@
             div.appendChild(img);
             div.appendChild(titleSpan);
 
-            // 点击缩略图打开查看器
             div.addEventListener('click', function () {
                 openViewer(index);
             });
@@ -268,14 +271,12 @@
             isOpen = false;
         }
 
-        // 点击黑色背景关闭（点击 viewer 本身，而不是内部元素）
         viewer.addEventListener('click', function (e) {
             if (e.target === viewer) {
                 closeViewer();
             }
         });
 
-        // 键盘事件
         document.addEventListener('keydown', function (e) {
             if (!isOpen) return;
             if (e.key === 'Escape') {
@@ -312,7 +313,7 @@
             const deltaY = touch.clientY - startY;
             if (Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
                 isSwiping = true;
-                e.preventDefault(); // 阻止页面滚动
+                e.preventDefault();
             }
         }, { passive: false });
 
@@ -325,13 +326,12 @@
 
             if (isSwiping && Math.abs(deltaX) > threshold && Math.abs(deltaX) > Math.abs(deltaY)) {
                 if (deltaX > 0) {
-                    nextImage(); // 右滑 → 下一张
+                    nextImage();
                 } else {
-                    prevImage(); // 左滑 → 上一张
+                    prevImage();
                 }
                 e.preventDefault();
             } else if (!isSwiping && Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
-                // 轻触（点击）关闭查看器
                 closeViewer();
             }
             startX = 0;
@@ -339,10 +339,7 @@
             isSwiping = false;
         }, { passive: false });
 
-        // 额外的：如果用户拖动图片边缘，我们可能不希望触发关闭，但已经处理了。
-
-        // 控制台提示
-        console.log('✅ 相册已加载，共 ' + photoData.length + ' 张照片。');
+        console.log('✅ 相册已加载，共 ' + photoData.length + ' 张照片，每行3张。');
     </script>
 
 </body>
