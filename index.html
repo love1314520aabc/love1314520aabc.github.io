@@ -28,9 +28,9 @@
         /* ---------- 缩略图网格 - 固定4列 ---------- */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);   /* 改为4列 */
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            max-width: 1100px;                      /* 稍微放宽，适应4列 */
+            max-width: 1100px;
             margin: 0 auto;
         }
         .gallery-item {
@@ -53,26 +53,20 @@
             object-fit: cover;
             display: block;
         }
-        .gallery-item .title {
-            padding: 6px 10px 2px;
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #333;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        /* 只保留描述，标题已删除 */
         .gallery-item .desc {
-            padding: 0 10px 10px;
-            font-size: 0.9em;
-            color: #777;
+            padding: 10px 12px;
+            font-size: 1em;
+            color: #555;
+            line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-            line-height: 1.4;
-            min-height: 2.8em;
+            min-height: 3em;
+            background: #fafafa;
+            border-top: 1px solid #eee;
         }
 
         /* ---------- 全屏查看器 ---------- */
@@ -110,7 +104,7 @@
             -webkit-user-drag: none;
         }
 
-        /* 图片下方信息条 */
+        /* 图片下方信息条 - 只显示描述 */
         .viewer-caption {
             position: absolute;
             bottom: 30px;
@@ -124,15 +118,8 @@
             max-width: 80%;
             backdrop-filter: blur(4px);
             pointer-events: none;
-        }
-        .viewer-caption .title {
-            font-size: 1.6em;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-        .viewer-caption .desc {
-            font-size: 1.1em;
-            opacity: 0.85;
+            font-size: 1.5em;
+            line-height: 1.5;
         }
 
         /* 图片计数 */
@@ -146,7 +133,36 @@
             letter-spacing: 1px;
         }
 
-        /* ---------- 左右箭头按钮 ---------- */
+        /* ---------- 关闭按钮 ---------- */
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            font-size: 3em;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.2s;
+            z-index: 20;
+            backdrop-filter: blur(4px);
+            pointer-events: auto;
+        }
+        .close-btn:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.1);
+        }
+        .close-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* ---------- 左右箭头 ---------- */
         .nav-btn {
             position: absolute;
             top: 50%;
@@ -180,16 +196,6 @@
         .next-btn {
             right: 20px;
         }
-        @media (max-width: 600px) {
-            .nav-btn {
-                font-size: 2.5em;
-                width: 50px;
-                height: 50px;
-                padding: 0;
-            }
-            .prev-btn { left: 10px; }
-            .next-btn { right: 10px; }
-        }
 
         /* ---------- 底部页脚 ---------- */
         .footer {
@@ -199,10 +205,10 @@
             margin: 50px 0 20px;
         }
 
-        /* ---------- 响应式：小屏改为2列 ---------- */
+        /* ---------- 响应式 ---------- */
         @media (max-width: 700px) {
             .gallery {
-                grid-template-columns: repeat(2, 1fr);  /* 平板/手机显示2列 */
+                grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
                 max-width: 100%;
             }
@@ -210,16 +216,29 @@
         }
         @media (max-width: 450px) {
             .gallery {
-                grid-template-columns: repeat(2, 1fr);  /* 小屏手机保持2列 */
+                grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
             .gallery-item img { height: 120px; }
-            .gallery-item .title { font-size: 0.9em; }
-            .gallery-item .desc { font-size: 0.75em; -webkit-line-clamp: 1; }
-            .viewer-caption .title { font-size: 1.2em; }
-            .viewer-caption .desc { font-size: 0.9em; }
+            .gallery-item .desc { font-size: 0.8em; padding: 6px 8px; }
+            .viewer-caption { font-size: 1.2em; padding: 10px 16px; }
             .footer { font-size: 1.2em; }
             h1 { font-size: 2.4em; }
+            .close-btn {
+                font-size: 2.2em;
+                width: 50px;
+                height: 50px;
+                top: 10px;
+                right: 15px;
+            }
+            .nav-btn {
+                font-size: 2.5em;
+                width: 50px;
+                height: 50px;
+                padding: 0;
+            }
+            .prev-btn { left: 10px; }
+            .next-btn { right: 10px; }
         }
     </style>
 </head>
@@ -236,13 +255,14 @@
     <!-- 全屏查看器 -->
     <div class="viewer" id="viewer">
         <div class="viewer-inner" id="viewer-inner">
+            <button class="close-btn" id="closeBtn">✕</button>
             <button class="nav-btn prev-btn" id="prevBtn">‹</button>
             <button class="nav-btn next-btn" id="nextBtn">›</button>
 
             <img id="viewer-img" src="" alt="查看大图" />
+            <!-- 只显示描述，没有标题 -->
             <div class="viewer-caption" id="viewer-caption">
-                <div class="title" id="caption-title">标题</div>
-                <div class="desc" id="caption-desc">描述</div>
+                <span id="caption-desc">描述文字</span>
             </div>
         </div>
         <div class="counter" id="counter">1 / 16</div>
@@ -250,29 +270,30 @@
 
     <script>
         // ================================================================
-        // 1. 配置区 - 一共16张照片（001.jpg ~ 016.jpg）
-        //    请根据需要修改标题（title）和描述（desc）
+        // 1. 配置区 - 共16张照片（001.jpg ~ 016.jpg）
+        //    你只需要修改 desc（描述）字段，title 已不再显示
         // ================================================================
         const photoData = [
-            { src: '001.jpg', title: '第一张', desc: '这是第一张照片的描述' },
-            { src: '002.jpg', title: '第二张', desc: '你可以在这里写任意文字' },
-            { src: '003.jpg', title: '第三张', desc: '支持 Emoji 😊' },
-            { src: '004.jpg', title: '第四张', desc: '记录美好瞬间' },
-            { src: '005.jpg', title: '第五张', desc: '每一张都有故事' },
-            { src: '006.jpg', title: '第六张', desc: '夕阳无限好' },
-            { src: '007.jpg', title: '第七张', desc: '海边的风' },
-            { src: '008.jpg', title: '第八张', desc: '城市夜景' },
-            { src: '009.jpg', title: '第九张', desc: '一起走过的路' },
-            { src: '010.jpg', title: '第十张', desc: '笑容灿烂' },
-            { src: '011.jpg', title: '第十一张', desc: '珍贵的回忆' },
-            { src: '012.jpg', title: '第十二张', desc: '四季如歌' },
-            { src: '013.jpg', title: '第十三张', desc: '温暖时光' },
-            { src: '014.jpg', title: '第十四张', desc: '平淡是真' },
-            { src: '015.jpg', title: '第十五张', desc: '未完待续…' },
-            { src: '016.jpg', title: '第十六张', desc: '新的开始 ✨' }
+            { src: '001.jpg', title: '', desc: '这是第一张照片的描述' },
+            { src: '002.jpg', title: '', desc: '你可以在这里写任意文字' },
+            { src: '003.jpg', title: '', desc: '支持 Emoji 😊' },
+            { src: '004.jpg', title: '', desc: '记录美好瞬间' },
+            { src: '005.jpg', title: '', desc: '每一张都有故事' },
+            { src: '006.jpg', title: '', desc: '夕阳无限好' },
+            { src: '007.jpg', title: '', desc: '海边的风' },
+            { src: '008.jpg', title: '', desc: '城市夜景' },
+            { src: '009.jpg', title: '', desc: '一起走过的路' },
+            { src: '010.jpg', title: '', desc: '笑容灿烂' },
+            { src: '011.jpg', title: '', desc: '珍贵的回忆' },
+            { src: '012.jpg', title: '', desc: '四季如歌' },
+            { src: '013.jpg', title: '', desc: '温暖时光' },
+            { src: '014.jpg', title: '', desc: '平淡是真' },
+            { src: '015.jpg', title: '', desc: '未完待续…' },
+            { src: '016.jpg', title: '', desc: '新的开始 ✨' }
         ];
 
-        // 2. 渲染缩略图
+        // ================================================================
+        // 2. 渲染缩略图（只显示描述）
         // ================================================================
         const gallery = document.getElementById('gallery');
 
@@ -282,19 +303,15 @@
 
             const img = document.createElement('img');
             img.src = 'photos/' + item.src;
-            img.alt = item.title;
+            img.alt = item.desc || '图片';
             img.loading = 'lazy';
 
-            const titleSpan = document.createElement('div');
-            titleSpan.className = 'title';
-            titleSpan.textContent = item.title;
-
+            // 只有描述，没有标题
             const descSpan = document.createElement('div');
             descSpan.className = 'desc';
             descSpan.textContent = item.desc;
 
             div.appendChild(img);
-            div.appendChild(titleSpan);
             div.appendChild(descSpan);
 
             div.addEventListener('click', function () {
@@ -310,7 +327,6 @@
         const viewer = document.getElementById('viewer');
         const viewerImg = document.getElementById('viewer-img');
         const counter = document.getElementById('counter');
-        const captionTitle = document.getElementById('caption-title');
         const captionDesc = document.getElementById('caption-desc');
         let currentIndex = 0;
         let isOpen = false;
@@ -325,7 +341,6 @@
         function updateViewer() {
             const data = photoData[currentIndex];
             viewerImg.src = 'photos/' + data.src;
-            captionTitle.textContent = data.title;
             captionDesc.textContent = data.desc;
             counter.textContent = (currentIndex + 1) + ' / ' + photoData.length;
         }
@@ -352,7 +367,13 @@
             }
         });
 
-        // 键盘事件
+        // 关闭按钮
+        document.getElementById('closeBtn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            closeViewer();
+        });
+
+        // 键盘
         document.addEventListener('keydown', function (e) {
             if (!isOpen) return;
             if (e.key === 'Escape') {
@@ -367,7 +388,7 @@
             }
         });
 
-        // 箭头按钮点击
+        // 箭头按钮
         document.getElementById('prevBtn').addEventListener('click', function (e) {
             e.stopPropagation();
             if (isOpen) prevImage();
@@ -378,12 +399,10 @@
         });
 
         // ================================================================
-        // 4. 触摸滑动切换（左滑下一张，右滑上一张）
+        // 4. 触摸滑动（左滑下一张，右滑上一张）
         // ================================================================
         const inner = document.getElementById('viewer-inner');
-        let startX = 0,
-            startY = 0,
-            isSwiping = false;
+        let startX = 0, startY = 0, isSwiping = false;
 
         inner.addEventListener('touchstart', function (e) {
             const touch = e.touches[0];
@@ -411,12 +430,8 @@
             const threshold = 40;
 
             if (isSwiping && Math.abs(deltaX) > threshold && Math.abs(deltaX) > Math.abs(deltaY)) {
-                // 左滑（deltaX < 0）→ 下一张，右滑（deltaX > 0）→ 上一张
-                if (deltaX < 0) {
-                    nextImage();
-                } else {
-                    prevImage();
-                }
+                if (deltaX < 0) nextImage();
+                else prevImage();
                 e.preventDefault();
             } else if (!isSwiping && Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
                 closeViewer();
@@ -426,7 +441,7 @@
             isSwiping = false;
         }, { passive: false });
 
-        console.log('✅ 相册已加载，共 ' + photoData.length + ' 张照片，每行4张。');
+        console.log('✅ 相册已加载，只显示描述文字。');
     </script>
 
 </body>
