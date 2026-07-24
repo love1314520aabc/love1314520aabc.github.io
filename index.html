@@ -5,50 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>我们的回忆相册</title>
     <style>
-        /* 全局重置 */
+        /* ---------- 全局 ---------- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            font-family: 'Arial', sans-serif;
-            background: #f0f0f0;
+            font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+            background: #f5f5f5;
             padding: 20px;
         }
 
-        /* 主标题 - 放大 */
+        /* ---------- 标题 ---------- */
         h1 {
             text-align: center;
-            font-size: 4em;
+            font-size: 3.5em;
             color: #333;
-            margin: 30px 0 20px;
+            margin: 20px 0 30px;
         }
 
-        /* 图片网格 */
+        /* ---------- 缩略图网格 ---------- */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
-
-        .gallery img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
+        .gallery-item {
+            text-align: center;
             cursor: pointer;
             transition: transform 0.2s;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+        .gallery-item .title {
+            padding: 8px 10px;
+            font-size: 1em;
+            color: #555;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .gallery img:hover {
-            transform: scale(1.03);
-        }
-
-        /* 全屏查看器 */
+        /* ---------- 全屏查看器 ---------- */
         .viewer {
             display: none;
             position: fixed;
@@ -56,14 +69,14 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.88);
+            z-index: 999;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 999;
-            cursor: pointer;
-            flex-direction: column;
+            cursor: pointer; /* 点击背景关闭 */
+            user-select: none;
         }
-
         .viewer-inner {
             position: relative;
             display: flex;
@@ -72,98 +85,159 @@
             width: 100%;
             height: 80%;
             cursor: grab;
-            touch-action: none; /* 防止浏览器默认手势干扰 */
+            touch-action: none;
         }
-
-        .viewer img {
-            max-width: 90%;
-            max-height: 100%;
-            border-radius: 15px;
-            pointer-events: none; /* 让触摸事件由父容器处理 */
+        .viewer-inner img {
+            max-width: 92%;
+            max-height: 92%;
+            border-radius: 12px;
+            pointer-events: none;
             user-select: none;
             -webkit-user-drag: none;
         }
 
-        /* 图片计数 */
-        .counter {
-            color: #ccc;
-            font-size: 1.8em;
-            margin-top: 20px;
-            background: rgba(0,0,0,0.5);
-            padding: 8px 20px;
-            border-radius: 30px;
+        /* 图片下方信息条 */
+        .viewer-caption {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 40px;
+            text-align: center;
+            max-width: 80%;
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+        }
+        .viewer-caption .title {
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .viewer-caption .desc {
+            font-size: 1.1em;
+            opacity: 0.85;
         }
 
-        /* 页脚 - 放大了 */
+        /* 图片计数（第几张） */
+        .counter {
+            color: #ccc;
+            font-size: 1.4em;
+            margin-top: 20px;
+            background: rgba(0,0,0,0.4);
+            padding: 6px 18px;
+            border-radius: 30px;
+            letter-spacing: 1px;
+        }
+
+        /* ---------- 底部页脚 ---------- */
         .footer {
             text-align: center;
             font-size: 1.8em;
-            color: #999;
+            color: #aaa;
             margin: 50px 0 20px;
         }
 
-        /* 小屏适配 */
+        /* ---------- 响应式 ---------- */
         @media (max-width: 600px) {
-            h1 { font-size: 2.5em; }
+            h1 { font-size: 2.4em; }
+            .gallery { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+            .gallery-item img { height: 120px; }
+            .viewer-caption .title { font-size: 1.2em; }
+            .viewer-caption .desc { font-size: 0.9em; }
             .footer { font-size: 1.2em; }
         }
     </style>
 </head>
 <body>
 
-    <h1>我们的回忆相册</h1>
+    <h1>📷 我们的回忆相册</h1>
 
-    <div class="gallery" id="box"></div>
+    <!-- 缩略图网格 -->
+    <div class="gallery" id="gallery"></div>
 
-    <div class="footer">❤️ 每一张都是珍贵的回忆</div>
+    <!-- 页脚 -->
+    <div class="footer">❤️ 每一张照片，都是时光的礼物</div>
 
-    <!-- 查看器 -->
+    <!-- 全屏查看器 -->
     <div class="viewer" id="viewer">
         <div class="viewer-inner" id="viewer-inner">
             <img id="viewer-img" src="" alt="查看大图" />
+            <!-- 图片描述文字 -->
+            <div class="viewer-caption" id="viewer-caption">
+                <div class="title" id="caption-title">标题</div>
+                <div class="desc" id="caption-desc">描述</div>
+            </div>
         </div>
-        <div class="counter" id="counter">1 / 13</div>
+        <div class="counter" id="counter">1 / 15</div>
     </div>
 
     <script>
-        // ------------------------------------------------------------
-        // 配置区
-        // ------------------------------------------------------------
-        const imageCount = 13;   // 图片数量（001.jpg ~ 013.jpg）
-        const imageList = [];    // 自动生成
-        for (let i = 1; i <= imageCount; i++) {
-            const num = String(i).padStart(3, '0');
-            imageList.push(num + '.jpg');
-        }
+        // ================================================================
+        // 1. 配置区 - 请在这里修改你的照片信息和文字
+        // ================================================================
+        const photoData = [
+            { src: '001.jpg', title: '第一张', desc: '这是第一张照片的描述' },
+            { src: '002.jpg', title: '第二张', desc: '你可以在这里写任意文字' },
+            { src: '003.jpg', title: '第三张', desc: '支持 Emoji 😊' },
+            { src: '004.jpg', title: '第四张', desc: '记录美好瞬间' },
+            { src: '005.jpg', title: '第五张', desc: '每一张都有故事' },
+            { src: '006.jpg', title: '第六张', desc: '夕阳无限好' },
+            { src: '007.jpg', title: '第七张', desc: '海边的风' },
+            { src: '008.jpg', title: '第八张', desc: '城市夜景' },
+            { src: '009.jpg', title: '第九张', desc: '一起走过的路' },
+            { src: '010.jpg', title: '第十张', desc: '笑容灿烂' },
+            { src: '011.jpg', title: '第十一张', desc: '珍贵的回忆' },
+            { src: '012.jpg', title: '第十二张', desc: '四季如歌' },
+            { src: '013.jpg', title: '第十三张', desc: '温暖时光' },
+            { src: '014.jpg', title: '第十四张', desc: '平淡是真' },
+            { src: '015.jpg', title: '第十五张', desc: '未完待续…' }
+        ];
+        // 如果你的图片不是从001开始，或者名称不规则，直接修改上面数组即可。
+        // 图片路径统一为 photos/ + src
 
-        // 如果想手动指定图片名，可以把上面注释掉，用下面的数组：
-        // const imageList = ['001.jpg', '002.jpg', 'myphoto.jpg', ...];
+        // ================================================================
+        // 2. 渲染缩略图
+        // ================================================================
+        const gallery = document.getElementById('gallery');
 
-        // ------------------------------------------------------------
-        // 渲染网格
-        // ------------------------------------------------------------
-        const gallery = document.getElementById('box');
-        imageList.forEach((filename, index) => {
+        photoData.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'gallery-item';
+
             const img = document.createElement('img');
-            img.src = 'photos/' + filename;
-            img.alt = filename;
-            img.dataset.index = index; // 记录索引
-            img.addEventListener('click', function () {
-                openViewer(parseInt(this.dataset.index));
+            img.src = 'photos/' + item.src;
+            img.alt = item.title;
+            img.loading = 'lazy';
+
+            const titleSpan = document.createElement('div');
+            titleSpan.className = 'title';
+            titleSpan.textContent = item.title;
+
+            div.appendChild(img);
+            div.appendChild(titleSpan);
+
+            // 点击缩略图打开查看器
+            div.addEventListener('click', function () {
+                openViewer(index);
             });
-            gallery.appendChild(img);
+
+            gallery.appendChild(div);
         });
 
-        // ------------------------------------------------------------
-        // 查看器逻辑
-        // ------------------------------------------------------------
+        // ================================================================
+        // 3. 查看器逻辑
+        // ================================================================
         const viewer = document.getElementById('viewer');
         const viewerImg = document.getElementById('viewer-img');
         const counter = document.getElementById('counter');
+        const captionTitle = document.getElementById('caption-title');
+        const captionDesc = document.getElementById('caption-desc');
         let currentIndex = 0;
         let isOpen = false;
 
-        // 打开查看器
         function openViewer(index) {
             currentIndex = index;
             updateViewer();
@@ -171,66 +245,58 @@
             isOpen = true;
         }
 
-        // 更新显示图片和计数
         function updateViewer() {
-            viewerImg.src = 'photos/' + imageList[currentIndex];
-            counter.textContent = (currentIndex + 1) + ' / ' + imageList.length;
+            const data = photoData[currentIndex];
+            viewerImg.src = 'photos/' + data.src;
+            captionTitle.textContent = data.title;
+            captionDesc.textContent = data.desc;
+            counter.textContent = (currentIndex + 1) + ' / ' + photoData.length;
         }
 
-        // 切换图片
         function prevImage() {
-            currentIndex = (currentIndex - 1 + imageList.length) % imageList.length;
+            currentIndex = (currentIndex - 1 + photoData.length) % photoData.length;
             updateViewer();
         }
 
         function nextImage() {
-            currentIndex = (currentIndex + 1) % imageList.length;
+            currentIndex = (currentIndex + 1) % photoData.length;
             updateViewer();
         }
 
-        // 关闭查看器
         function closeViewer() {
             viewer.style.display = 'none';
             isOpen = false;
         }
 
-        // ------------------------------------------------------------
-        // 点击背景关闭（点击查看器本身，但避开内部容器）
-        // 点击内部容器不会关闭（但内部容器有图片，图片本身没有事件）
-        // 我们使用事件委托：点击查看器，如果目标就是查看器本身，则关闭。
-        // 因为内部容器会阻止冒泡？我们直接判断 e.target === viewer
-        // ------------------------------------------------------------
+        // 点击黑色背景关闭（点击 viewer 本身，而不是内部元素）
         viewer.addEventListener('click', function (e) {
             if (e.target === viewer) {
                 closeViewer();
             }
         });
 
-        // ESC 键关闭
+        // 键盘事件
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && isOpen) {
+            if (!isOpen) return;
+            if (e.key === 'Escape') {
                 closeViewer();
-            }
-            // 左右箭头切换
-            if (isOpen) {
-                if (e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    prevImage();
-                } else if (e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    nextImage();
-                }
+                e.preventDefault();
+            } else if (e.key === 'ArrowLeft') {
+                prevImage();
+                e.preventDefault();
+            } else if (e.key === 'ArrowRight') {
+                nextImage();
+                e.preventDefault();
             }
         });
 
-        // ------------------------------------------------------------
-        // 触摸滑动切换（支持手机）
-        // 绑定到查看器的内部容器上，以便图片区域也能滑动
-        // ------------------------------------------------------------
+        // ================================================================
+        // 4. 触摸滑动切换（手机端）
+        // ================================================================
         const inner = document.getElementById('viewer-inner');
-        let startX = 0;
-        let startY = 0;
-        let isSwiping = false;
+        let startX = 0,
+            startY = 0,
+            isSwiping = false;
 
         inner.addEventListener('touchstart', function (e) {
             const touch = e.touches[0];
@@ -240,15 +306,13 @@
         }, { passive: true });
 
         inner.addEventListener('touchmove', function (e) {
-            // 如果正在滑动，阻止页面滚动
             if (!startX) return;
             const touch = e.touches[0];
             const deltaX = touch.clientX - startX;
             const deltaY = touch.clientY - startY;
-            // 判断水平滑动距离大于垂直，且超过阈值，才认为是滑动
             if (Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
                 isSwiping = true;
-                e.preventDefault(); // 阻止滚动
+                e.preventDefault(); // 阻止页面滚动
             }
         }, { passive: false });
 
@@ -257,36 +321,28 @@
             const touch = e.changedTouches[0];
             const deltaX = touch.clientX - startX;
             const deltaY = touch.clientY - startY;
-            const threshold = 40; // 滑动多少像素触发切换
+            const threshold = 40;
 
             if (isSwiping && Math.abs(deltaX) > threshold && Math.abs(deltaX) > Math.abs(deltaY)) {
-                // 向右滑（deltaX > 0）→ 下一张；向左滑 → 上一张
                 if (deltaX > 0) {
-                    nextImage();
+                    nextImage(); // 右滑 → 下一张
                 } else {
-                    prevImage();
+                    prevImage(); // 左滑 → 上一张
                 }
-                // 阻止可能的点击关闭
                 e.preventDefault();
             } else if (!isSwiping && Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
-                // 如果没有滑动，视为点击，关闭查看器
+                // 轻触（点击）关闭查看器
                 closeViewer();
             }
-
-            // 重置
             startX = 0;
             startY = 0;
             isSwiping = false;
         }, { passive: false });
 
-        // 额外：如果用户在查看器背景上滑动（但背景会触发关闭），我们已经在查看器上禁止了点击关闭（只当点击背景才关闭），
-        // 但背景滑动不会触发关闭，因为滑动会触发 inner 的 touch 事件，而背景滑动可能不会。我们可以在 viewer 本身也加上类似逻辑。
-        // 但为了简单，我们只需在 inner 上处理即可，因为图片区域是主要的交互区。
-        // 如果用户滑动背景（黑色区域），我们也可以关闭，但我们不鼓励，所以就不处理了。
+        // 额外的：如果用户拖动图片边缘，我们可能不希望触发关闭，但已经处理了。
 
-        // 另外，鼠标拖拽切换（桌面端）也可以用类似 mousedown/mousemove，但考虑到桌面用户可以用键盘，暂时不实现鼠标拖拽，以免复杂。
-
-        console.log('相册已加载，支持触摸滑动和键盘左右键切换！');
+        // 控制台提示
+        console.log('✅ 相册已加载，共 ' + photoData.length + ' 张照片。');
     </script>
 
 </body>
