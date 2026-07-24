@@ -25,12 +25,12 @@
             margin: 20px 0 30px;
         }
 
-        /* ---------- 缩略图网格 - 固定3列 ---------- */
+        /* ---------- 缩略图网格 - 固定4列 ---------- */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);   /* 改为4列 */
             gap: 20px;
-            max-width: 900px;
+            max-width: 1100px;                      /* 稍微放宽，适应4列 */
             margin: 0 auto;
         }
         .gallery-item {
@@ -199,13 +199,19 @@
             margin: 50px 0 20px;
         }
 
-        /* ---------- 响应式 ---------- */
-        @media (max-width: 600px) {
-            h1 { font-size: 2.4em; }
+        /* ---------- 响应式：小屏改为2列 ---------- */
+        @media (max-width: 700px) {
             .gallery {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 12px;
+                grid-template-columns: repeat(2, 1fr);  /* 平板/手机显示2列 */
+                gap: 15px;
                 max-width: 100%;
+            }
+            .gallery-item img { height: 160px; }
+        }
+        @media (max-width: 450px) {
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);  /* 小屏手机保持2列 */
+                gap: 10px;
             }
             .gallery-item img { height: 120px; }
             .gallery-item .title { font-size: 0.9em; }
@@ -213,6 +219,7 @@
             .viewer-caption .title { font-size: 1.2em; }
             .viewer-caption .desc { font-size: 0.9em; }
             .footer { font-size: 1.2em; }
+            h1 { font-size: 2.4em; }
         }
     </style>
 </head>
@@ -238,12 +245,13 @@
                 <div class="desc" id="caption-desc">描述</div>
             </div>
         </div>
-        <div class="counter" id="counter">1 / 15</div>
+        <div class="counter" id="counter">1 / 16</div>
     </div>
 
     <script>
         // ================================================================
-        // 1. 配置区 - 请在这里修改你的照片信息和文字
+        // 1. 配置区 - 一共16张照片（001.jpg ~ 016.jpg）
+        //    请根据需要修改标题（title）和描述（desc）
         // ================================================================
         const photoData = [
             { src: '001.jpg', title: '第一张', desc: '这是第一张照片的描述' },
@@ -260,10 +268,10 @@
             { src: '012.jpg', title: '第十二张', desc: '四季如歌' },
             { src: '013.jpg', title: '第十三张', desc: '温暖时光' },
             { src: '014.jpg', title: '第十四张', desc: '平淡是真' },
-            { src: '015.jpg', title: '第十五张', desc: '未完待续…' }
+            { src: '015.jpg', title: '第十五张', desc: '未完待续…' },
+            { src: '016.jpg', title: '第十六张', desc: '新的开始 ✨' }
         ];
 
-        // ================================================================
         // 2. 渲染缩略图
         // ================================================================
         const gallery = document.getElementById('gallery');
@@ -344,7 +352,7 @@
             }
         });
 
-        // 键盘事件（左右箭头方向保持不变：左←上一张，右→下一张）
+        // 键盘事件
         document.addEventListener('keydown', function (e) {
             if (!isOpen) return;
             if (e.key === 'Escape') {
@@ -370,7 +378,7 @@
         });
 
         // ================================================================
-        // 4. 触摸滑动切换（已修改：左滑下一张，右滑上一张）
+        // 4. 触摸滑动切换（左滑下一张，右滑上一张）
         // ================================================================
         const inner = document.getElementById('viewer-inner');
         let startX = 0,
@@ -403,15 +411,14 @@
             const threshold = 40;
 
             if (isSwiping && Math.abs(deltaX) > threshold && Math.abs(deltaX) > Math.abs(deltaY)) {
-                // 修改：左滑（deltaX < 0）→ 下一张，右滑（deltaX > 0）→ 上一张
+                // 左滑（deltaX < 0）→ 下一张，右滑（deltaX > 0）→ 上一张
                 if (deltaX < 0) {
-                    nextImage(); // 左滑下一张
+                    nextImage();
                 } else {
-                    prevImage(); // 右滑上一张
+                    prevImage();
                 }
                 e.preventDefault();
             } else if (!isSwiping && Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
-                // 轻触关闭
                 closeViewer();
             }
             startX = 0;
@@ -419,7 +426,7 @@
             isSwiping = false;
         }, { passive: false });
 
-        console.log('✅ 相册已加载，共 ' + photoData.length + ' 张照片。触摸滑动已改为：左滑下一张，右滑上一张。');
+        console.log('✅ 相册已加载，共 ' + photoData.length + ' 张照片，每行4张。');
     </script>
 
 </body>
