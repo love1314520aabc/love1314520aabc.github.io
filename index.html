@@ -25,13 +25,13 @@
             margin: 20px 0 30px;
         }
 
-        /* ---------- 缩略图网格 - 修改为固定3列 ---------- */
+        /* ---------- 缩略图网格 - 固定3列 ---------- */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);   /* 每行3列 */
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            max-width: 900px;                       /* 限制最大宽度，图片不会太宽 */
-            margin: 0 auto;                         /* 居中 */
+            max-width: 900px;
+            margin: 0 auto;
         }
         .gallery-item {
             text-align: center;
@@ -41,24 +41,39 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
         }
         .gallery-item:hover {
             transform: translateY(-5px);
         }
         .gallery-item img {
             width: 100%;
-            height: 200px;          /* 固定高度，保持整齐 */
+            height: 200px;
             object-fit: cover;
             display: block;
         }
         .gallery-item .title {
-            padding: 8px 10px;
-            font-size: 1em;
-            color: #555;
-            font-weight: 500;
+            padding: 6px 10px 2px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+        /* 新增：描述文字，直接显示在缩略图下方 */
+        .gallery-item .desc {
+            padding: 0 10px 10px;
+            font-size: 0.9em;
+            color: #777;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;          /* 最多显示两行 */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+            min-height: 2.8em;              /* 占位，防止高度跳动 */
         }
 
         /* ---------- 全屏查看器 ---------- */
@@ -74,7 +89,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
+            cursor: pointer; /* 点击背景关闭 */
             user-select: none;
         }
         .viewer-inner {
@@ -96,7 +111,7 @@
             -webkit-user-drag: none;
         }
 
-        /* 图片下方信息条 */
+        /* 图片下方信息条（仍然保留） */
         .viewer-caption {
             position: absolute;
             bottom: 30px;
@@ -132,6 +147,52 @@
             letter-spacing: 1px;
         }
 
+        /* ---------- 左右箭头按钮（电脑端） ---------- */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            font-size: 4em;
+            padding: 0 20px;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            z-index: 10;
+            pointer-events: auto;   /* 让按钮可点击 */
+            backdrop-filter: blur(4px);
+        }
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.4);
+        }
+        .nav-btn:active {
+            transform: translateY(-50%) scale(0.9);
+        }
+        .prev-btn {
+            left: 20px;
+        }
+        .next-btn {
+            right: 20px;
+        }
+        /* 手机小屏上箭头缩小一点 */
+        @media (max-width: 600px) {
+            .nav-btn {
+                font-size: 2.5em;
+                width: 50px;
+                height: 50px;
+                padding: 0;
+            }
+            .prev-btn { left: 10px; }
+            .next-btn { right: 10px; }
+        }
+
         /* ---------- 底部页脚 ---------- */
         .footer {
             text-align: center;
@@ -140,20 +201,24 @@
             margin: 50px 0 20px;
         }
 
-        /* ---------- 响应式：小屏设备可能显示2列，但尽量保持3列 ---------- */
+        /* ---------- 响应式小屏 ---------- */
         @media (max-width: 600px) {
             h1 { font-size: 2.4em; }
             .gallery {
-                grid-template-columns: repeat(3, 1fr); /* 依然3列，但图片会缩小 */
+                grid-template-columns: repeat(3, 1fr);
                 gap: 12px;
                 max-width: 100%;
             }
             .gallery-item img { height: 120px; }
+            .gallery-item .title { font-size: 0.9em; }
+            .gallery-item .desc { font-size: 0.75em; -webkit-line-clamp: 1; }
             .viewer-caption .title { font-size: 1.2em; }
             .viewer-caption .desc { font-size: 0.9em; }
             .footer { font-size: 1.2em; }
         }
-        /* 如果屏幕过窄（<400px），可以改为2列，但用户没要求，我们保留3列，但可能会太挤，所以这里不强制 */
+        @media (max-width: 400px) {
+            /* 超小屏可以改为2列，但保留3列可能会挤，这里不强制，用户可自行调整 */
+        }
     </style>
 </head>
 <body>
@@ -169,6 +234,10 @@
     <!-- 全屏查看器 -->
     <div class="viewer" id="viewer">
         <div class="viewer-inner" id="viewer-inner">
+            <!-- 左右箭头按钮 -->
+            <button class="nav-btn prev-btn" id="prevBtn">‹</button>
+            <button class="nav-btn next-btn" id="nextBtn">›</button>
+
             <img id="viewer-img" src="" alt="查看大图" />
             <div class="viewer-caption" id="viewer-caption">
                 <div class="title" id="caption-title">标题</div>
@@ -199,11 +268,10 @@
             { src: '014.jpg', title: '第十四张', desc: '平淡是真' },
             { src: '015.jpg', title: '第十五张', desc: '未完待续…' }
         ];
-        // 如果你的图片不是从001开始，或者名称不规则，直接修改上面数组即可。
         // 图片路径统一为 photos/ + src
 
         // ================================================================
-        // 2. 渲染缩略图
+        // 2. 渲染缩略图（标题+描述都显示）
         // ================================================================
         const gallery = document.getElementById('gallery');
 
@@ -220,8 +288,13 @@
             titleSpan.className = 'title';
             titleSpan.textContent = item.title;
 
+            const descSpan = document.createElement('div');
+            descSpan.className = 'desc';
+            descSpan.textContent = item.desc;
+
             div.appendChild(img);
             div.appendChild(titleSpan);
+            div.appendChild(descSpan);
 
             div.addEventListener('click', function () {
                 openViewer(index);
@@ -271,12 +344,14 @@
             isOpen = false;
         }
 
+        // 点击黑色背景关闭
         viewer.addEventListener('click', function (e) {
             if (e.target === viewer) {
                 closeViewer();
             }
         });
 
+        // 键盘事件
         document.addEventListener('keydown', function (e) {
             if (!isOpen) return;
             if (e.key === 'Escape') {
@@ -289,6 +364,16 @@
                 nextImage();
                 e.preventDefault();
             }
+        });
+
+        // 箭头按钮点击（阻止冒泡到viewer，以免触发关闭）
+        document.getElementById('prevBtn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (isOpen) prevImage();
+        });
+        document.getElementById('nextBtn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (isOpen) nextImage();
         });
 
         // ================================================================
@@ -326,12 +411,13 @@
 
             if (isSwiping && Math.abs(deltaX) > threshold && Math.abs(deltaX) > Math.abs(deltaY)) {
                 if (deltaX > 0) {
-                    nextImage();
+                    nextImage(); // 左滑下一张
                 } else {
-                    prevImage();
+                    prevImage(); // 右滑上一张
                 }
                 e.preventDefault();
             } else if (!isSwiping && Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
+                // 轻触关闭
                 closeViewer();
             }
             startX = 0;
@@ -339,7 +425,7 @@
             isSwiping = false;
         }, { passive: false });
 
-        console.log('✅ 相册已加载，共 ' + photoData.length + ' 张照片，每行3张。');
+        console.log('✅ 相册已加载，共 ' + photoData.length + ' 张照片，缩略图下方直接显示描述，查看器有箭头按钮。');
     </script>
 
 </body>
