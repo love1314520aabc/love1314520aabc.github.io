@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>我们的回忆相册</title>
     <style>
         /* 全局重置 */
@@ -21,7 +21,7 @@
         /* 主标题 - 放大 */
         h1 {
             text-align: center;
-            font-size: 4em;          /* 原来是 2em 左右，现在明显变大 */
+            font-size: 4em;
             color: #333;
             margin: 30px 0 20px;
         }
@@ -38,7 +38,7 @@
         .gallery img {
             width: 100%;
             height: 200px;
-            object-fit: cover;        /* 保证图片不变形裁剪 */
+            object-fit: cover;
             border-radius: 10px;
             cursor: pointer;
             transition: transform 0.2s;
@@ -48,7 +48,7 @@
             transform: scale(1.03);
         }
 
-        /* 全屏查看器（点击图片后出现） */
+        /* 全屏查看器 */
         .viewer {
             display: none;
             position: fixed;
@@ -61,20 +61,51 @@
             align-items: center;
             z-index: 999;
             cursor: pointer;
+            flex-direction: column;
+        }
+
+        .viewer-inner {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 80%;
+            cursor: grab;
+            touch-action: none; /* 防止浏览器默认手势干扰 */
         }
 
         .viewer img {
             max-width: 90%;
-            max-height: 90%;
+            max-height: 100%;
             border-radius: 15px;
+            pointer-events: none; /* 让触摸事件由父容器处理 */
+            user-select: none;
+            -webkit-user-drag: none;
         }
 
-        /* 页脚 - 也放大了 */
+        /* 图片计数 */
+        .counter {
+            color: #ccc;
+            font-size: 1.8em;
+            margin-top: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 20px;
+            border-radius: 30px;
+        }
+
+        /* 页脚 - 放大了 */
         .footer {
             text-align: center;
-            font-size: 1.8em;         /* 比默认大很多 */
+            font-size: 1.8em;
             color: #999;
             margin: 50px 0 20px;
+        }
+
+        /* 小屏适配 */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5em; }
+            .footer { font-size: 1.2em; }
         }
     </style>
 </head>
@@ -82,65 +113,180 @@
 
     <h1>我们的回忆相册</h1>
 
-    <!-- 图片容器 -->
     <div class="gallery" id="box"></div>
 
     <div class="footer">❤️ 每一张都是珍贵的回忆</div>
 
-    <!-- 查看器（初始隐藏） -->
+    <!-- 查看器 -->
     <div class="viewer" id="viewer">
-        <img id="viewer-img" src="" alt="查看大图" />
+        <div class="viewer-inner" id="viewer-inner">
+            <img id="viewer-img" src="" alt="查看大图" />
+        </div>
+        <div class="counter" id="counter">1 / 13</div>
     </div>
 
     <script>
         // ------------------------------------------------------------
-        // 在这里设置你的图片数量（如果你有更多或更少，改这个数字即可）
-        // 比如你有 20 张，就改成 20，程序会自动生成 001.jpg ~ 020.jpg
-        // 如果你的图片命名不连续，请往下看“手动指定”的注释
+        // 配置区
         // ------------------------------------------------------------
-        const imageCount = 13;   // 目前是 001.jpg ~ 013.jpg
-
-        // 自动生成图片文件名列表
-        const images = [];
+        const imageCount = 13;   // 图片数量（001.jpg ~ 013.jpg）
+        const imageList = [];    // 自动生成
         for (let i = 1; i <= imageCount; i++) {
-            const num = String(i).padStart(3, '0'); // 补零：1 -> 001, 13 -> 013
-            images.push(num + '.jpg');
+            const num = String(i).padStart(3, '0');
+            imageList.push(num + '.jpg');
         }
 
-        // ----- 如果你的图片不是连续编号，可以改为手动指定 -----
-        // 例如：const images = ['001.jpg', '002.jpg', 'myphoto.jpg', ...];
-        // 然后把上面的 imageCount 和 for 循环注释掉，用这个数组代替。
+        // 如果想手动指定图片名，可以把上面注释掉，用下面的数组：
+        // const imageList = ['001.jpg', '002.jpg', 'myphoto.jpg', ...];
 
-        // 渲染图片到网格
+        // ------------------------------------------------------------
+        // 渲染网格
+        // ------------------------------------------------------------
         const gallery = document.getElementById('box');
-        images.forEach(src => {
+        imageList.forEach((filename, index) => {
             const img = document.createElement('img');
-            img.src = 'photos/' + src;   // 相对路径，确保 photos 文件夹在根目录
-            img.alt = src;
-
-            // 点击图片 -> 打开查看器
+            img.src = 'photos/' + filename;
+            img.alt = filename;
+            img.dataset.index = index; // 记录索引
             img.addEventListener('click', function () {
-                const viewer = document.getElementById('viewer');
-                const viewerImg = document.getElementById('viewer-img');
-                viewerImg.src = this.src;
-                viewer.style.display = 'flex';
+                openViewer(parseInt(this.dataset.index));
             });
-
             gallery.appendChild(img);
         });
 
-        // 点击查看器背景（黑色区域）关闭
+        // ------------------------------------------------------------
+        // 查看器逻辑
+        // ------------------------------------------------------------
         const viewer = document.getElementById('viewer');
-        viewer.addEventListener('click', function () {
-            this.style.display = 'none';
-        });
+        const viewerImg = document.getElementById('viewer-img');
+        const counter = document.getElementById('counter');
+        let currentIndex = 0;
+        let isOpen = false;
 
-        // 按 ESC 键关闭查看器
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-                viewer.style.display = 'none';
+        // 打开查看器
+        function openViewer(index) {
+            currentIndex = index;
+            updateViewer();
+            viewer.style.display = 'flex';
+            isOpen = true;
+        }
+
+        // 更新显示图片和计数
+        function updateViewer() {
+            viewerImg.src = 'photos/' + imageList[currentIndex];
+            counter.textContent = (currentIndex + 1) + ' / ' + imageList.length;
+        }
+
+        // 切换图片
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + imageList.length) % imageList.length;
+            updateViewer();
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % imageList.length;
+            updateViewer();
+        }
+
+        // 关闭查看器
+        function closeViewer() {
+            viewer.style.display = 'none';
+            isOpen = false;
+        }
+
+        // ------------------------------------------------------------
+        // 点击背景关闭（点击查看器本身，但避开内部容器）
+        // 点击内部容器不会关闭（但内部容器有图片，图片本身没有事件）
+        // 我们使用事件委托：点击查看器，如果目标就是查看器本身，则关闭。
+        // 因为内部容器会阻止冒泡？我们直接判断 e.target === viewer
+        // ------------------------------------------------------------
+        viewer.addEventListener('click', function (e) {
+            if (e.target === viewer) {
+                closeViewer();
             }
         });
+
+        // ESC 键关闭
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && isOpen) {
+                closeViewer();
+            }
+            // 左右箭头切换
+            if (isOpen) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    prevImage();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    nextImage();
+                }
+            }
+        });
+
+        // ------------------------------------------------------------
+        // 触摸滑动切换（支持手机）
+        // 绑定到查看器的内部容器上，以便图片区域也能滑动
+        // ------------------------------------------------------------
+        const inner = document.getElementById('viewer-inner');
+        let startX = 0;
+        let startY = 0;
+        let isSwiping = false;
+
+        inner.addEventListener('touchstart', function (e) {
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+            isSwiping = false;
+        }, { passive: true });
+
+        inner.addEventListener('touchmove', function (e) {
+            // 如果正在滑动，阻止页面滚动
+            if (!startX) return;
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - startX;
+            const deltaY = touch.clientY - startY;
+            // 判断水平滑动距离大于垂直，且超过阈值，才认为是滑动
+            if (Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                isSwiping = true;
+                e.preventDefault(); // 阻止滚动
+            }
+        }, { passive: false });
+
+        inner.addEventListener('touchend', function (e) {
+            if (!startX) return;
+            const touch = e.changedTouches[0];
+            const deltaX = touch.clientX - startX;
+            const deltaY = touch.clientY - startY;
+            const threshold = 40; // 滑动多少像素触发切换
+
+            if (isSwiping && Math.abs(deltaX) > threshold && Math.abs(deltaX) > Math.abs(deltaY)) {
+                // 向右滑（deltaX > 0）→ 下一张；向左滑 → 上一张
+                if (deltaX > 0) {
+                    nextImage();
+                } else {
+                    prevImage();
+                }
+                // 阻止可能的点击关闭
+                e.preventDefault();
+            } else if (!isSwiping && Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
+                // 如果没有滑动，视为点击，关闭查看器
+                closeViewer();
+            }
+
+            // 重置
+            startX = 0;
+            startY = 0;
+            isSwiping = false;
+        }, { passive: false });
+
+        // 额外：如果用户在查看器背景上滑动（但背景会触发关闭），我们已经在查看器上禁止了点击关闭（只当点击背景才关闭），
+        // 但背景滑动不会触发关闭，因为滑动会触发 inner 的 touch 事件，而背景滑动可能不会。我们可以在 viewer 本身也加上类似逻辑。
+        // 但为了简单，我们只需在 inner 上处理即可，因为图片区域是主要的交互区。
+        // 如果用户滑动背景（黑色区域），我们也可以关闭，但我们不鼓励，所以就不处理了。
+
+        // 另外，鼠标拖拽切换（桌面端）也可以用类似 mousedown/mousemove，但考虑到桌面用户可以用键盘，暂时不实现鼠标拖拽，以免复杂。
+
+        console.log('相册已加载，支持触摸滑动和键盘左右键切换！');
     </script>
 
 </body>
