@@ -1,1 +1,1147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>💕 我们的故事 · 致我最爱的你</title>
 
+    <style>
+        /* ===== 全局重置 & 基础 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+            background: #1a0b1f;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        /* ===== 动态渐变背景 ===== */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #1a0b1f 0%, #2d1b3d 25%, #4a1942 50%, #6b2a5c 75%, #3d1f4a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 0%;
+            }
+            25% {
+                background-position: 100% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            75% {
+                background-position: 0% 100%;
+            }
+            100% {
+                background-position: 0% 0%;
+            }
+        }
+
+        /* 背景光晕 */
+        .glow-orbs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: orbFloat 20s ease-in-out infinite alternate;
+        }
+
+        .glow-orb:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: #ff6b9d;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .glow-orb:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            background: #c44dff;
+            bottom: -150px;
+            right: -150px;
+            animation-delay: -5s;
+        }
+
+        .glow-orb:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: #ff9a76;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+            opacity: 0.2;
+        }
+
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(60px, -40px) scale(1.1);
+            }
+            66% {
+                transform: translate(-30px, 50px) scale(0.9);
+            }
+            100% {
+                transform: translate(20px, -20px) scale(1.05);
+            }
+        }
+
+        /* ===== 飘落爱心粒子 (DOM) ===== */
+        #hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .heart-particle {
+            position: absolute;
+            top: -40px;
+            font-size: 20px;
+            opacity: 0.6;
+            animation: heartFall linear infinite;
+            user-select: none;
+            text-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+        }
+
+        @keyframes heartFall {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(105vh) rotate(720deg) scale(0.2);
+                opacity: 0;
+            }
+        }
+
+        /* ===== 主容器 ===== */
+        .main-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        /* ===== Hero 标题区 ===== */
+        .hero {
+            text-align: center;
+            padding: 60px 0 40px;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff6b9d, #c44dff, transparent);
+            border-radius: 2px;
+        }
+
+        .hero-title {
+            font-size: clamp(2.4rem, 7vw, 4.8rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 25%, #fbc2eb 50%, #a18cd1 75%, #fbc2eb 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleShine 6s ease-in-out infinite alternate;
+            line-height: 1.2;
+            letter-spacing: 2px;
+            text-shadow: none;
+            filter: drop-shadow(0 4px 40px rgba(255, 107, 157, 0.15));
+        }
+
+        @keyframes titleShine {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .hero-sub {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 16px;
+            letter-spacing: 6px;
+            font-weight: 300;
+            animation: fadeUp 1.2s ease-out 0.3s both;
+        }
+
+        .hero-sub span {
+            display: inline-block;
+            animation: heartBeat 1.8s ease-in-out infinite;
+        }
+
+        @keyframes heartBeat {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            15% {
+                transform: scale(1.25);
+            }
+            30% {
+                transform: scale(1);
+            }
+            45% {
+                transform: scale(1.15);
+            }
+            60% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 浪漫小诗 */
+        .hero-poem {
+            margin-top: 20px;
+            font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+            letter-spacing: 2px;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        /* ===== 相册网格 ===== */
+        .album-section {
+            margin-top: 50px;
+        }
+
+        .album-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+            padding: 10px 0;
+        }
+
+        /* ===== 照片卡片 ===== */
+        .photo-card {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 3 / 4;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                border-color 0.4s ease;
+            will-change: transform;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(255, 107, 157, 0.25),
+                0 0 80px rgba(196, 77, 255, 0.10);
+            border-color: rgba(255, 107, 157, 0.3);
+            z-index: 5;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .photo-card:hover img {
+            transform: scale(1.06);
+        }
+
+        /* 照片遮罩 + 告白文字 */
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 16px 18px;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+            transform: translateY(30%);
+            opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            pointer-events: none;
+        }
+
+        .photo-card:hover .photo-overlay {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .photo-overlay .love-text {
+            font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+            font-weight: 500;
+            color: #fff;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            line-height: 1.5;
+            letter-spacing: 1px;
+        }
+
+        .photo-overlay .love-icon {
+            font-size: 18px;
+            margin-right: 6px;
+            display: inline-block;
+            animation: heartBeat 2s ease-in-out infinite;
+        }
+
+        /* 照片角标 - 爱心编号 */
+        .photo-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 107, 157, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #fff;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(255, 107, 157, 0.15);
+            font-family: "Georgia", serif;
+        }
+
+        .photo-card:hover .photo-badge {
+            background: rgba(255, 107, 157, 0.5);
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ===== 底部告白信 ===== */
+        .love-letter-section {
+            margin-top: 70px;
+            text-align: center;
+            position: relative;
+        }
+
+        .love-letter-section::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 157, 0.3), transparent);
+        }
+
+        .letter-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 48px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, #ff6b9d, #c44dff);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 8px 40px rgba(255, 107, 157, 0.25);
+            letter-spacing: 2px;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-toggle::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .letter-toggle:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 50px rgba(255, 107, 157, 0.35);
+        }
+
+        .letter-toggle:hover::before {
+            opacity: 1;
+        }
+
+        .letter-toggle:active {
+            transform: scale(0.96);
+        }
+
+        .letter-toggle .icon {
+            font-size: 1.3rem;
+            transition: transform 0.4s ease;
+        }
+
+        .letter-toggle.open .icon {
+            transform: rotate(180deg);
+        }
+
+        .letter-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                opacity 0.6s ease,
+                margin 0.6s ease;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .letter-content.open {
+            max-height: 1200px;
+            opacity: 1;
+            margin-top: 40px;
+        }
+
+        .letter-paper {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 40px 36px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: left;
+            position: relative;
+        }
+
+        .letter-paper::before {
+            content: '💌';
+            position: absolute;
+            top: -18px;
+            right: 30px;
+            font-size: 36px;
+            filter: drop-shadow(0 4px 20px rgba(255, 107, 157, 0.3));
+        }
+
+        .letter-paper .greeting {
+            font-size: 1.4rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ff9a9e, #fbc2eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .letter-paper .body-text {
+            font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 0.5px;
+            font-weight: 300;
+        }
+
+        .letter-paper .body-text p {
+            margin-bottom: 16px;
+        }
+
+        .letter-paper .signature {
+            margin-top: 24px;
+            text-align: right;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 2px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 20px;
+        }
+
+        .letter-paper .signature .name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ff9a9e, #c44dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== 模态框 ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            max-width: 640px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+            padding: 32px 32px 40px;
+            transform: scale(0.92) translateY(30px);
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                opacity 0.5s ease;
+            opacity: 0;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .modal-box .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .modal-box .modal-close:hover {
+            background: rgba(255, 107, 157, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-box .modal-img {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-box .modal-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ff9a9e, #fbc2eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-box .modal-sub {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-box .modal-sub .heart-emoji {
+            display: inline-block;
+            animation: heartBeat 1.8s ease-in-out infinite;
+        }
+
+        /* ===== 滚动条美化 ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 107, 157, 0.3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 107, 157, 0.5);
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .main-wrapper {
+                padding: 20px 16px 60px;
+            }
+
+            .hero {
+                padding: 30px 0 30px;
+            }
+
+            .album-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+            }
+
+            .photo-card {
+                border-radius: 14px;
+            }
+
+            .photo-overlay {
+                padding: 20px 12px 12px;
+            }
+            .photo-overlay .love-text {
+                font-size: 0.8rem;
+            }
+
+            .photo-badge {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+                top: 10px;
+                right: 10px;
+            }
+
+            .letter-toggle {
+                padding: 14px 30px;
+                font-size: 0.95rem;
+                gap: 8px;
+            }
+
+            .letter-paper {
+                padding: 28px 20px;
+                border-radius: 18px;
+            }
+            .letter-paper .body-text {
+                font-size: 0.95rem;
+                line-height: 1.9;
+            }
+
+            .modal-box {
+                padding: 24px 20px 28px;
+                border-radius: 20px;
+            }
+            .modal-box .modal-title {
+                font-size: 1.3rem;
+            }
+            .modal-box .modal-sub {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .album-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .hero-title {
+                font-size: 2rem;
+            }
+            .hero-sub {
+                font-size: 0.8rem;
+                letter-spacing: 3px;
+            }
+            .hero-poem {
+                font-size: 0.75rem;
+            }
+            .photo-badge {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+            .photo-overlay .love-text {
+                font-size: 0.7rem;
+            }
+            .letter-toggle {
+                padding: 12px 24px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ===== 照片加载动画 ===== */
+        .photo-card {
+            opacity: 0;
+            animation: cardFadeIn 0.8s ease-out forwards;
+        }
+
+        .photo-card:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+        .photo-card:nth-child(2) {
+            animation-delay: 0.10s;
+        }
+        .photo-card:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+        .photo-card:nth-child(4) {
+            animation-delay: 0.20s;
+        }
+        .photo-card:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+        .photo-card:nth-child(6) {
+            animation-delay: 0.30s;
+        }
+        .photo-card:nth-child(7) {
+            animation-delay: 0.35s;
+        }
+        .photo-card:nth-child(8) {
+            animation-delay: 0.40s;
+        }
+        .photo-card:nth-child(9) {
+            animation-delay: 0.45s;
+        }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== 页脚 ===== */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            font-weight: 300;
+        }
+
+        .footer .love-emoji {
+            display: inline-block;
+            animation: heartBeat 2.4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 动态渐变背景 ===== -->
+    <div class="bg-gradient"></div>
+    <div class="glow-orbs">
+        <div class="glow-orb"></div>
+        <div class="glow-orb"></div>
+        <div class="glow-orb"></div>
+    </div>
+
+    <!-- ===== 飘落爱心粒子容器 ===== -->
+    <div id="hearts-container"></div>
+
+    <!-- ===== 主内容 ===== -->
+    <div class="main-wrapper">
+
+        <!-- ===== Hero ===== -->
+        <header class="hero">
+            <h1 class="hero-title">💕 我们的故事</h1>
+            <p class="hero-sub">
+                <span>❤️</span> 每一张照片，都是我想对你说的情话 <span>❤️</span>
+            </p>
+            <div class="hero-poem">
+                “ 我把所有温柔都藏进了光影里，<br />
+                等你一页一页，翻开我的心意。 ”
+            </div>
+        </header>
+
+        <!-- ===== 相册 ===== -->
+        <section class="album-section">
+            <div class="album-grid" id="albumGrid">
+                <!-- 照片卡片由 JavaScript 动态生成 -->
+            </div>
+        </section>
+
+        <!-- ===== 告白信 ===== -->
+        <section class="love-letter-section">
+            <button class="letter-toggle" id="letterToggle">
+                <span class="icon">💌</span>
+                点击开启 · 写给你的信
+                <span style="font-size:0.8rem; opacity:0.6; margin-left:4px;">▼</span>
+            </button>
+            <div class="letter-content" id="letterContent">
+                <div class="letter-paper">
+                    <div class="greeting">💖 致我最亲爱的你</div>
+                    <div class="body-text">
+                        <p>
+                            从遇见你的那一天起，我的世界就开始有了颜色。
+                            你像一束温柔的光，悄悄照进我原本平淡的生活，
+                            让每一个平凡的日子都变得闪闪发光。
+                        </p>
+                        <p>
+                            和你在一起的每一刻，我都想用镜头记录下来。
+                            你的笑容，你的眼神，你所有的小情绪，
+                            都是我眼中最美的风景。
+                        </p>
+                        <p>
+                            也许我不太会说动人的情话，
+                            但我想用这些照片告诉你——
+                            <strong style="color: #ff9a9e;">你是我所有温柔与心动的总和。</strong>
+                        </p>
+                        <p>
+                            未来的路还很长，我想牵着你的手，
+                            一起看遍四季的变换，走过每一个晨昏。
+                            我会把我们的故事，一页一页，写满余生。
+                        </p>
+                    </div>
+                    <div class="signature">
+                        —— 永远爱你的 <span class="name">❤️ 你的那个TA</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 页脚 ===== -->
+        <div class="footer">
+            <span class="love-emoji">💕</span>  made with all my love  <span class="love-emoji">💕</span>
+        </div>
+
+    </div>
+
+    <!-- ===== 模态框 ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <button class="modal-close" id="modalClose">✕</button>
+            <img class="modal-img" id="modalImg" src="" alt="照片" />
+            <div class="modal-title" id="modalTitle">💕 想对你说</div>
+            <div class="modal-sub" id="modalSub">
+                <span class="heart-emoji">❤️</span> 你是我生命中最美好的存在
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // 1. 数据配置 —— 在这里替换你的照片和告白语！
+        // ================================================================
+
+        // 每张照片的数据：image 为图片链接，title 为短句，desc 为详细告白
+        // 默认使用 picsum.photos 的占位图，你可以把 image 替换成自己的图片 URL
+        const photos = [{
+            image: 'https://picsum.photos/seed/love1/600/800',
+            title: '✨ 你的笑容',
+            desc: '你的笑容，是我每天最想看到的风景。像春天的第一缕阳光，温柔又耀眼。'
+        }, {
+            image: 'https://picsum.photos/seed/love2/600/800',
+            title: '🌙 温柔时光',
+            desc: '和你在一起的每一秒，都像是被温柔包裹的时光。安静、美好，让人想永远停留。'
+        }, {
+            image: 'https://picsum.photos/seed/love3/600/800',
+            title: '🌸 心动瞬间',
+            desc: '每一次心动，都是因为你。你的名字，是我听过最美的诗。'
+        }, {
+            image: 'https://picsum.photos/seed/love4/600/800',
+            title: '🌊 余生有你',
+            desc: '余生很长，想和你一起慢慢走。从清晨到黄昏，从青丝到白发。'
+        }, {
+            image: 'https://picsum.photos/seed/love5/600/800',
+            title: '💫 你是星辰',
+            desc: '你是我藏在心底的温柔，也是我抬头就能看见的星辰。'
+        }, {
+            image: 'https://picsum.photos/seed/love6/600/800',
+            title: '🍃 四季如你',
+            desc: '想和你一起看春天的花，夏天的海，秋天的叶，冬天的雪。四季轮转，而你始终在身边。'
+        }, {
+            image: 'https://picsum.photos/seed/love7/600/800',
+            title: '🎵 心动旋律',
+            desc: '你是我所有的温柔和心动，是我不愿醒来的梦，是我单曲循环的旋律。'
+        }, {
+            image: 'https://picsum.photos/seed/love8/600/800',
+            title: '🌹 勇敢爱你',
+            desc: '爱你，是我做过最勇敢的事。也是我这一生，最不后悔的决定。'
+        }, {
+            image: 'https://picsum.photos/seed/love9/600/800',
+            title: '💕 我们的故事',
+            desc: '我们的故事，从遇见开始，到永远都不会结束。因为，你就是我的永远。'
+        }];
+
+        // ================================================================
+        // 2. 渲染相册
+        // ================================================================
+
+        const grid = document.getElementById('albumGrid');
+
+        photos.forEach((photo, index) => {
+            const card = document.createElement('div');
+            card.className = 'photo-card';
+            card.dataset.index = index;
+
+            card.innerHTML = `
+                <img src="${photo.image}" alt="${photo.title}" loading="lazy" />
+                <div class="photo-overlay">
+                    <div class="love-text">
+                        <span class="love-icon">❤️</span> ${photo.title}
+                    </div>
+                </div>
+                <div class="photo-badge">${String(index + 1).padStart(2, '0')}</div>
+            `;
+
+            // 点击卡片 → 打开模态框
+            card.addEventListener('click', () => {
+                openModal(index);
+            });
+
+            grid.appendChild(card);
+        });
+
+        // ================================================================
+        // 3. 模态框逻辑
+        // ================================================================
+
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalImg = document.getElementById('modalImg');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalSub = document.getElementById('modalSub');
+        const modalClose = document.getElementById('modalClose');
+
+        function openModal(index) {
+            const data = photos[index];
+            modalImg.src = data.image;
+            modalImg.alt = data.title;
+            modalTitle.textContent = `💕 ${data.title}`;
+            modalSub.innerHTML = `<span class="heart-emoji">❤️</span> ${data.desc}`;
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        // ESC 键关闭
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ================================================================
+        // 4. 告白信展开/收起
+        // ================================================================
+
+        const letterToggle = document.getElementById('letterToggle');
+        const letterContent = document.getElementById('letterContent');
+
+        letterToggle.addEventListener('click', () => {
+            const isOpen = letterContent.classList.toggle('open');
+            letterToggle.classList.toggle('open');
+            letterToggle.innerHTML = isOpen ?
+                `<span class="icon">💖</span> 收起信笺 <span style="font-size:0.8rem; opacity:0.6; margin-left:4px;">▲</span>` :
+                `<span class="icon">💌</span> 点击开启 · 写给你的信 <span style="font-size:0.8rem; opacity:0.6; margin-left:4px;">▼</span>`;
+        });
+
+        // ================================================================
+        // 5. 飘落爱心粒子 (DOM 方式)
+        // ================================================================
+
+        const heartsContainer = document.getElementById('hearts-container');
+
+        // 爱心字符池
+        const heartChars = ['❤️', '💕', '💗', '💖', '💝', '♥️'];
+
+        function createHeart() {
+            const el = document.createElement('div');
+            el.className = 'heart-particle';
+            el.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+
+            // 随机大小
+            const size = 16 + Math.random() * 28;
+            el.style.fontSize = size + 'px';
+
+            // 随机水平位置
+            el.style.left = Math.random() * 100 + '%';
+
+            // 随机动画时长 (10s ~ 22s)
+            const duration = 12 + Math.random() * 14;
+            el.style.animationDuration = duration + 's';
+
+            // 随机延迟
+            el.style.animationDelay = (Math.random() * 8) + 's';
+
+            // 随机透明度
+            el.style.opacity = 0.3 + Math.random() * 0.5;
+
+            heartsContainer.appendChild(el);
+
+            // 动画结束后移除 DOM 节点
+            el.addEventListener('animationend', () => {
+                el.remove();
+            });
+        }
+
+        // 持续生成爱心
+        function spawnHearts() {
+            // 同时存在的爱心数量控制在 25~40 个
+            const currentCount = heartsContainer.children.length;
+            if (currentCount < 35) {
+                const count = 1 + Math.floor(Math.random() * 2);
+                for (let i = 0; i < count; i++) {
+                    createHeart();
+                }
+            }
+            requestAnimationFrame(spawnHearts);
+        }
+
+        // 启动粒子系统 (延迟一点，等页面加载完成)
+        setTimeout(spawnHearts, 600);
+
+        // ================================================================
+        // 6. 额外氛围：页面加载时的小彩蛋 (控制台)
+        // ================================================================
+
+        console.log('%c💕 致我最爱的你 💕', 'font-size:24px; font-weight:bold; color:#ff6b9d;');
+        console.log('%c每一张照片，都是我想对你说的情话。', 'font-size:14px; color:#c44dff;');
+        console.log('%c—— 愿这份心意，能被你温柔收藏。', 'font-size:14px; color:#ff9a76;');
+
+        // 小彩蛋：点击页面任何地方随机显示爱心 (但别太干扰)
+        document.addEventListener('click', (e) => {
+            // 如果点击的是按钮或模态框内部，不触发
+            if (e.target.closest('.letter-toggle') || e.target.closest('.modal-box') || e.target.closest(
+                    '.modal-overlay')) return;
+
+            // 在点击位置生成一个爱心
+            const heart = document.createElement('div');
+            heart.textContent = '💕';
+            heart.style.cssText = `
+                    position: fixed;
+                    left: ${e.clientX - 16}px;
+                    top: ${e.clientY - 16}px;
+                    font-size: 32px;
+                    pointer-events: none;
+                    z-index: 9999;
+                    animation: heartPop 0.8s ease-out forwards;
+                    filter: drop-shadow(0 0 20px rgba(255,107,157,0.4));
+                `;
+            document.body.appendChild(heart);
+
+            // 定义动画
+            const style = document.createElement('style');
+            style.textContent = `
+                    @keyframes heartPop {
+                        0%   { transform: scale(0.5) translateY(0); opacity: 1; }
+                        100% { transform: scale(1.6) translateY(-80px); opacity: 0; }
+                    }
+                `;
+            document.head.appendChild(style);
+
+            setTimeout(() => {
+                heart.remove();
+                style.remove();
+            }, 900);
+        });
+
+        // ================================================================
+        // 7. 图片加载失败时的备用处理
+        // ================================================================
+
+        document.querySelectorAll('.photo-card img').forEach(img => {
+            img.addEventListener('error', function() {
+                // 如果图片加载失败，显示一个渐变色占位
+                this.style.display = 'none';
+                const card = this.closest('.photo-card');
+                const placeholder = document.createElement('div');
+                placeholder.style.cssText = `
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(135deg, #2d1b3d, #4a1942);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 48px;
+                        color: rgba(255,255,255,0.15);
+                    `;
+                placeholder.textContent = '💕';
+                card.prepend(placeholder);
+            });
+        });
+
+        console.log('✨ 相册已加载，祝你告白成功！ 💖');
+    </script>
+
+</body>
+</html>
