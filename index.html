@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>吃饭睡觉</title>
+    <title>雷杰楠❤️李咏琳</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             width: 100vw;
             height: 100vh;
-            background: #1a1a1a;
+            background: #111;
             overflow: hidden;
             font-family: "Microsoft Yahei", sans-serif;
             position: relative;
         }
+
         /* 爱心轮廓标签 */
         .heart-tag {
             position: absolute;
@@ -32,10 +34,12 @@
             transition: all 0.25s ease-out;
             z-index: 2;
         }
+
         .heart-tag.show {
             opacity: 1;
             transform: scale(1);
         }
+
         /* 满屏随机标签 */
         .full-tag {
             position: absolute;
@@ -48,43 +52,46 @@
             transition: opacity 0.4s ease;
             z-index: 1;
         }
+
         .full-tag.show {
             opacity: 0.8;
         }
-        /* 中间主标题 */
+
+        /* 爱心中间主标题 */
         #center-title {
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%) scale(0);
-            padding: 10px 24px;
+            padding: 12px 28px;
             background: #ff69b4;
             color: #fff;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             border-radius: 6px;
             z-index: 10;
-            transition: all 0.4s ease;
-            box-shadow: 0 0 15px rgba(255,105,180,0.6);
+            transition: all 0.5s ease;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+            letter-spacing: 2px;
         }
+
         #center-title.show {
             transform: translate(-50%, -50%) scale(1);
         }
     </style>
 </head>
 <body>
+    <!-- 动画容器 -->
     <div id="heart-wrap"></div>
     <div id="full-wrap"></div>
-    <div id="center-title">好好吃饭</div>
+    <div id="center-title">雷杰楠❤️李咏琳</div>
 
     <script>
-        // ========== 可自定义配置 ==========
         const setting = {
-            heartSize: 14,       // 爱心整体大小
-            heartSpeed: 20,      // 爱心弹出速度(毫秒/个，数字越小越快)
-            fullCount: 220,      // 满屏标签数量
-            fullSpeed: 15,       // 满屏标签弹出速度(毫秒/个)
-            // 超大词语库
+            heartSize: 14,
+            heartSpeed: 20,
+            fullCount: 260,
+            fullSpeed: 12,
             texts: [
                 "好好吃饭", "按时睡觉", "天天开心", "我想你了", "喜欢你", "别熬夜",
                 "照顾自己", "保持好心情", "爱你", "想抱抱你", "早安", "晚安",
@@ -94,9 +101,9 @@
                 "温柔半两", "从容一生", "不负遇见", "不谈亏欠", "满心欢喜", "如约而至",
                 "万事顺意", "来日可期", "平安顺遂", "喜乐安康", "慢慢变好", "人间值得",
                 "万事皆宜", "百事从欢", "顺顺当当", "无忧无虑", "大展宏图", "步步高升",
-                "金榜题名", "桃花朵朵", "财源滚滚", "元气满满", "可可爱爱", "没有烦恼"
+                "金榜题名", "桃花朵朵", "财源滚滚", "元气满满", "可可爱爱", "没有烦恼",
+                "携手余生", "朝夕相伴", "岁岁年年", "满心是你", "偏爱予你", "忠爱一生"
             ],
-            // 配色
             colors: [
                 "#FFB6C1", "#FFC0CB", "#FF69B4", "#FF85A2",
                 "#98FB98", "#90EE90", "#7CCD7C", "#7FFFD4",
@@ -105,17 +112,17 @@
             ]
         };
 
-        const heartWrap = document.getElementById('heart-wrap');
-        const fullWrap = document.getElementById('full-wrap');
-        const centerTitle = document.getElementById('center-title');
+        const heartWrap = document.getElementById("heart-wrap");
+        const fullWrap = document.getElementById("full-wrap");
+        const centerTitle = document.getElementById("center-title");
 
-        // 爱心公式生成坐标
+        // 生成爱心坐标
         function getHeartPoints(scale) {
             const points = [];
             for (let t = 0; t < 360; t += 2.5) {
                 const rad = t * Math.PI / 180;
                 const x = 16 * Math.pow(Math.sin(rad), 3);
-                const y = 13*Math.cos(rad) - 5*Math.cos(2*rad) - 2*Math.cos(3*rad) - Math.cos(4*rad);
+                const y = 13 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad);
                 points.push({
                     x: Math.round(x * scale),
                     y: Math.round(-y * scale)
@@ -129,21 +136,21 @@
             return arr[Math.floor(Math.random() * arr.length)];
         }
 
-        // 生成满屏随机标签
+        // 生成满屏标签
         function createFullTags() {
             const w = window.innerWidth;
             const h = window.innerHeight;
-            
+
             for (let i = 0; i < setting.fullCount; i++) {
                 setTimeout(() => {
-                    const tag = document.createElement('div');
-                    tag.className = 'full-tag';
+                    const tag = document.createElement("div");
+                    tag.className = "full-tag";
                     tag.textContent = randomItem(setting.texts);
                     tag.style.background = randomItem(setting.colors);
-                    tag.style.left = Math.random() * (w - 80) + 'px';
-                    tag.style.top = Math.random() * (h - 30) + 'px';
+                    tag.style.left = Math.random() * (w - 80) + "px";
+                    tag.style.top = Math.random() * (h - 30) + "px";
                     fullWrap.appendChild(tag);
-                    requestAnimationFrame(() => tag.classList.add('show'));
+                    requestAnimationFrame(() => tag.classList.add("show"));
                 }, i * setting.fullSpeed);
             }
         }
@@ -156,19 +163,19 @@
 
             points.forEach((pos, index) => {
                 setTimeout(() => {
-                    const tag = document.createElement('div');
-                    tag.className = 'heart-tag';
+                    const tag = document.createElement("div");
+                    tag.className = "heart-tag";
                     tag.textContent = randomItem(setting.texts);
                     tag.style.background = randomItem(setting.colors);
-                    tag.style.left = (centerX + pos.x) + 'px';
-                    tag.style.top = (centerY + pos.y) + 'px';
+                    tag.style.left = (centerX + pos.x) + "px";
+                    tag.style.top = (centerY + pos.y) + "px";
                     heartWrap.appendChild(tag);
-                    requestAnimationFrame(() => tag.classList.add('show'));
+                    requestAnimationFrame(() => tag.classList.add("show"));
 
-                    // 爱心画完后显示中间标题 + 开启满屏
+                    // 爱心画完后显示中间标题 + 铺满全屏
                     if (index === points.length - 1) {
                         setTimeout(() => {
-                            centerTitle.classList.add('show');
+                            centerTitle.classList.add("show");
                             createFullTags();
                         }, 300);
                     }
@@ -176,16 +183,8 @@
             });
         }
 
-        // 页面加载自动播放
+        // 页面加载直接开始动画
         window.onload = playHeart;
-
-        // 窗口大小变化重绘
-        window.onresize = () => {
-            heartWrap.innerHTML = '';
-            fullWrap.innerHTML = '';
-            centerTitle.classList.remove('show');
-            playHeart();
-        };
     </script>
 </body>
 </html>
