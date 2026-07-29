@@ -1,190 +1,334 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>雷杰楠❤️李咏琳</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>光影 · 四时集</title>
     <style>
+        /* ===== 全局重置 & 字体 ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
+
         body {
-            width: 100vw;
-            height: 100vh;
-            background: #111;
-            overflow: hidden;
-            font-family: "Microsoft Yahei", sans-serif;
+            min-height: 100vh;
+            background: #0d0c0a;
+            /* 深邃基底 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ===== 氛围光晕 ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 80%, rgba(180, 130, 80, 0.15) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 50% at 80% 20%, rgba(200, 160, 110, 0.10) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 50% 50%, rgba(120, 100, 70, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== 主容器 ===== */
+        .gallery-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
+            width: 100%;
+        }
+
+        /* ===== 头部 ===== */
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 4rem;
             position: relative;
         }
 
-        /* 爱心轮廓标签 */
-        .heart-tag {
-            position: absolute;
-            padding: 5px 10px;
-            border-radius: 3px;
-            color: #fff;
-            font-size: 13px;
-            font-weight: bold;
-            white-space: nowrap;
-            opacity: 0;
-            transform: scale(0.6);
-            transition: all 0.25s ease-out;
-            z-index: 2;
+        .gallery-header .ornament {
+            display: inline-block;
+            width: 48px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(210, 180, 140, 0.6), transparent);
+            margin-bottom: 1.25rem;
         }
 
-        .heart-tag.show {
-            opacity: 1;
-            transform: scale(1);
+        .gallery-header h1 {
+            font-size: clamp(2rem, 5vw, 3.8rem);
+            font-weight: 300;
+            letter-spacing: 0.18em;
+            color: #e8e0d6;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+            margin-bottom: 0.5rem;
         }
 
-        /* 满屏随机标签 */
-        .full-tag {
-            position: absolute;
-            padding: 3px 8px;
-            border-radius: 3px;
-            color: #fff;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: 1;
+        .gallery-header h1 span {
+            font-weight: 500;
+            color: #d4c0a8;
         }
 
-        .full-tag.show {
-            opacity: 0.8;
+        .gallery-header .sub {
+            font-size: clamp(0.8rem, 1.2vw, 1rem);
+            letter-spacing: 0.4em;
+            color: rgba(200, 185, 165, 0.5);
+            font-weight: 300;
+            text-transform: uppercase;
+            margin-top: 0.3rem;
         }
 
-        /* 爱心中间主标题 */
-        #center-title {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            padding: 12px 28px;
-            background: #ff69b4;
-            color: #fff;
-            font-size: 20px;
-            font-weight: bold;
-            border-radius: 6px;
+        /* ===== 照片网格 ===== */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.8rem;
+            perspective: 1200px;
+        }
+
+        /* ===== 每张卡片 ===== */
+        .photo-card {
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #1a1714;
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.7),
+                0 0 0 1px rgba(255, 215, 175, 0.06) inset;
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            transform: rotateX(0deg) rotateY(0deg) scale(1);
+            cursor: default;
+            aspect-ratio: 4 / 5;
+            /* 让卡片更接近经典照片比例 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 悬停效果 - 优雅浮起 */
+        .photo-card:hover {
+            transform: translateY(-10px) scale(1.01);
+            box-shadow:
+                0 30px 70px rgba(0, 0, 0, 0.8),
+                0 0 0 1px rgba(255, 215, 175, 0.15) inset;
             z-index: 10;
-            transition: all 0.5s ease;
-            box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
-            letter-spacing: 2px;
         }
 
-        #center-title.show {
-            transform: translate(-50%, -50%) scale(1);
+        /* 图片本身 */
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                filter 0.6s ease;
+            filter: brightness(0.92) saturate(1.05) contrast(1.02);
+        }
+
+        .photo-card:hover img {
+            transform: scale(1.03);
+            filter: brightness(1.0) saturate(1.1) contrast(1.05);
+        }
+
+        /* ===== 卡片上的编号 / 氛围标记 ===== */
+        .photo-card .card-label {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            color: rgba(230, 215, 195, 0.5);
+            background: rgba(10, 8, 6, 0.4);
+            backdrop-filter: blur(6px);
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 215, 175, 0.08);
+            font-weight: 300;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+
+        .photo-card:hover .card-label {
+            color: rgba(230, 215, 195, 0.8);
+            background: rgba(10, 8, 6, 0.6);
+            border-color: rgba(255, 215, 175, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ===== 微妙光晕 (每张卡片独立氛围) ===== */
+        .photo-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            background:
+                radial-gradient(circle at 30% 20%, rgba(255, 220, 170, 0.06) 0%, transparent 60%),
+                radial-gradient(circle at 70% 80%, rgba(200, 160, 120, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+            opacity: 0.6;
+        }
+
+        .photo-card:hover::after {
+            opacity: 1;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .photo-grid {
+                gap: 1.2rem;
+            }
+
+            .photo-card .card-label {
+                bottom: 1rem;
+                left: 1rem;
+                font-size: 0.6rem;
+                padding: 0.3rem 0.8rem;
+            }
+        }
+
+        @media (max-width: 540px) {
+            .photo-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.8rem;
+            }
+
+            .photo-card {
+                aspect-ratio: 4 / 5;
+                border-radius: 12px;
+            }
+
+            .gallery-header {
+                margin-bottom: 2.5rem;
+            }
+
+            .gallery-header h1 {
+                letter-spacing: 0.1em;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .photo-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+
+            .photo-card {
+                aspect-ratio: 4 / 5;
+                max-width: 380px;
+                margin: 0 auto;
+            }
+
+            body {
+                padding: 1rem;
+            }
+        }
+
+        /* ===== 加载淡入动画 ===== */
+        .photo-card {
+            opacity: 0;
+            animation: cardFadeIn 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .photo-card:nth-child(1) {
+            animation-delay: 0.10s;
+        }
+        .photo-card:nth-child(2) {
+            animation-delay: 0.25s;
+        }
+        .photo-card:nth-child(3) {
+            animation-delay: 0.40s;
+        }
+        .photo-card:nth-child(4) {
+            animation-delay: 0.55s;
+        }
+
+        @keyframes cardFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== 底部极简签名 ===== */
+        .gallery-footer {
+            text-align: center;
+            margin-top: 3.5rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            color: rgba(180, 165, 145, 0.2);
+            font-weight: 300;
+            border-top: 1px solid rgba(255, 215, 175, 0.04);
+            padding-top: 2rem;
+        }
+
+        @media (max-width: 540px) {
+            .gallery-footer {
+                margin-top: 2rem;
+                padding-top: 1.5rem;
+                font-size: 0.6rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 动画容器 -->
-    <div id="heart-wrap"></div>
-    <div id="full-wrap"></div>
-    <div id="center-title">雷杰楠❤️李咏琳</div>
+    <div class="gallery-wrapper">
 
-    <script>
-        const setting = {
-            heartSize: 14,
-            heartSpeed: 20,
-            fullCount: 260,
-            fullSpeed: 12,
-            texts: [
-                "好好吃饭", "按时睡觉", "天天开心", "我想你了", "喜欢你", "别熬夜",
-                "照顾自己", "保持好心情", "爱你", "想抱抱你", "早安", "晚安",
-                "多喝水", "注意身体", "要快乐", "平安喜乐", "万事胜意", "得偿所愿",
-                "岁岁平安", "前程似锦", "未来可期", "好运连连", "发财被爱", "一路生花",
-                "心想事成", "无忧无虑", "身体健康", "暴富暴美", "星河滚烫", "人间理想",
-                "温柔半两", "从容一生", "不负遇见", "不谈亏欠", "满心欢喜", "如约而至",
-                "万事顺意", "来日可期", "平安顺遂", "喜乐安康", "慢慢变好", "人间值得",
-                "万事皆宜", "百事从欢", "顺顺当当", "无忧无虑", "大展宏图", "步步高升",
-                "金榜题名", "桃花朵朵", "财源滚滚", "元气满满", "可可爱爱", "没有烦恼",
-                "携手余生", "朝夕相伴", "岁岁年年", "满心是你", "偏爱予你", "忠爱一生"
-            ],
-            colors: [
-                "#FFB6C1", "#FFC0CB", "#FF69B4", "#FF85A2",
-                "#98FB98", "#90EE90", "#7CCD7C", "#7FFFD4",
-                "#FFE4B5", "#FFDAB9", "#FFEFD5", "#FFFACD",
-                "#B0E0E6", "#ADD8E6", "#E6E6FA", "#DDA0DD"
-            ]
-        };
+        <!-- ====== 头部 ====== -->
+        <header class="gallery-header">
+            <div class="ornament"></div>
+            <h1>四时 · <span>光影</span></h1>
+            <p class="sub">片刻 · 静谧 · 叙事</p>
+        </header>
 
-        const heartWrap = document.getElementById("heart-wrap");
-        const fullWrap = document.getElementById("full-wrap");
-        const centerTitle = document.getElementById("center-title");
+        <!-- ====== 照片网格 ====== -->
+        <div class="photo-grid">
 
-        // 生成爱心坐标
-        function getHeartPoints(scale) {
-            const points = [];
-            for (let t = 0; t < 360; t += 2.5) {
-                const rad = t * Math.PI / 180;
-                const x = 16 * Math.pow(Math.sin(rad), 3);
-                const y = 13 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad);
-                points.push({
-                    x: Math.round(x * scale),
-                    y: Math.round(-y * scale)
-                });
-            }
-            return points;
-        }
+            <!-- 照片 1 -->
+            <figure class="photo-card">
+                <img src="photos/001.jpg" alt="光影瞬间 01" loading="lazy" />
+                <span class="card-label">01 · 晨</span>
+            </figure>
 
-        // 随机取数组元素
-        function randomItem(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
+            <!-- 照片 2 -->
+            <figure class="photo-card">
+                <img src="photos/002.jpg" alt="光影瞬间 02" loading="lazy" />
+                <span class="card-label">02 · 昼</span>
+            </figure>
 
-        // 生成满屏标签
-        function createFullTags() {
-            const w = window.innerWidth;
-            const h = window.innerHeight;
+            <!-- 照片 3 -->
+            <figure class="photo-card">
+                <img src="photos/003.jpg" alt="光影瞬间 03" loading="lazy" />
+                <span class="card-label">03 · 暮</span>
+            </figure>
 
-            for (let i = 0; i < setting.fullCount; i++) {
-                setTimeout(() => {
-                    const tag = document.createElement("div");
-                    tag.className = "full-tag";
-                    tag.textContent = randomItem(setting.texts);
-                    tag.style.background = randomItem(setting.colors);
-                    tag.style.left = Math.random() * (w - 80) + "px";
-                    tag.style.top = Math.random() * (h - 30) + "px";
-                    fullWrap.appendChild(tag);
-                    requestAnimationFrame(() => tag.classList.add("show"));
-                }, i * setting.fullSpeed);
-            }
-        }
+            <!-- 照片 4 -->
+            <figure class="photo-card">
+                <img src="photos/004.jpg" alt="光影瞬间 04" loading="lazy" />
+                <span class="card-label">04 · 夜</span>
+            </figure>
 
-        // 播放爱心动画
-        function playHeart() {
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            const points = getHeartPoints(setting.heartSize);
+        </div>
 
-            points.forEach((pos, index) => {
-                setTimeout(() => {
-                    const tag = document.createElement("div");
-                    tag.className = "heart-tag";
-                    tag.textContent = randomItem(setting.texts);
-                    tag.style.background = randomItem(setting.colors);
-                    tag.style.left = (centerX + pos.x) + "px";
-                    tag.style.top = (centerY + pos.y) + "px";
-                    heartWrap.appendChild(tag);
-                    requestAnimationFrame(() => tag.classList.add("show"));
+        <!-- ====== 底部 ====== -->
+        <div class="gallery-footer">
+            ✦ 四时集 · 光影之间 ✦
+        </div>
 
-                    // 爱心画完后显示中间标题 + 铺满全屏
-                    if (index === points.length - 1) {
-                        setTimeout(() => {
-                            centerTitle.classList.add("show");
-                            createFullTags();
-                        }, 300);
-                    }
-                }, index * setting.heartSpeed);
-            });
-        }
-
-        // 页面加载直接开始动画
-        window.onload = playHeart;
-    </script>
+    </div>
 </body>
 </html>
