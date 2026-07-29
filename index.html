@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>光影 · 四时集</title>
+    <title>吃瓜网</title>
     <style>
         /* ===== 全局重置 & 字体 ===== */
         * {
@@ -12,12 +12,9 @@
             box-sizing: border-box;
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
-
         body {
             min-height: 100vh;
             background: #0d0c0a;
-            /* 深邃基底 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -27,7 +24,6 @@
             overflow-x: hidden;
         }
 
-        /* ===== 氛围光晕 ===== */
         body::before {
             content: '';
             position: fixed;
@@ -40,7 +36,6 @@
             z-index: 0;
         }
 
-        /* ===== 主容器 ===== */
         .gallery-wrapper {
             position: relative;
             z-index: 1;
@@ -48,7 +43,6 @@
             width: 100%;
         }
 
-        /* ===== 头部 ===== */
         .gallery-header {
             text-align: center;
             margin-bottom: 4rem;
@@ -86,7 +80,6 @@
             margin-top: 0.3rem;
         }
 
-        /* ===== 照片网格 ===== */
         .photo-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -94,7 +87,6 @@
             perspective: 1200px;
         }
 
-        /* ===== 每张卡片 ===== */
         .photo-card {
             position: relative;
             border-radius: 18px;
@@ -105,16 +97,13 @@
                 0 0 0 1px rgba(255, 215, 175, 0.06) inset;
             transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
                 box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            transform: rotateX(0deg) rotateY(0deg) scale(1);
-            cursor: default;
             aspect-ratio: 4 / 5;
-            /* 让卡片更接近经典照片比例 */
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: default;
         }
 
-        /* 悬停效果 - 优雅浮起 */
         .photo-card:hover {
             transform: translateY(-10px) scale(1.01);
             box-shadow:
@@ -123,7 +112,6 @@
             z-index: 10;
         }
 
-        /* 图片本身 */
         .photo-card img {
             width: 100%;
             height: 100%;
@@ -139,7 +127,38 @@
             filter: brightness(1.0) saturate(1.1) contrast(1.05);
         }
 
-        /* ===== 卡片上的编号 / 氛围标记 ===== */
+        /* ===== 图片加载失败时的占位样式 ===== */
+        .photo-card .fallback-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #2a2520;
+            color: rgba(200, 185, 165, 0.3);
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 18px;
+        }
+
+        .photo-card .fallback-placeholder .icon {
+            font-size: 2.4rem;
+            margin-bottom: 0.6rem;
+            opacity: 0.4;
+        }
+
+        .photo-card .fallback-placeholder .filename {
+            color: rgba(200, 185, 165, 0.5);
+            font-size: 0.75rem;
+            background: rgba(0,0,0,0.3);
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-family: monospace;
+        }
+
         .photo-card .card-label {
             position: absolute;
             bottom: 1.5rem;
@@ -156,6 +175,7 @@
             text-transform: uppercase;
             transition: all 0.4s ease;
             pointer-events: none;
+            z-index: 2;
         }
 
         .photo-card:hover .card-label {
@@ -165,7 +185,6 @@
             transform: translateY(-2px);
         }
 
-        /* ===== 微妙光晕 (每张卡片独立氛围) ===== */
         .photo-card::after {
             content: '';
             position: absolute;
@@ -177,94 +196,46 @@
             pointer-events: none;
             transition: opacity 0.6s ease;
             opacity: 0.6;
+            z-index: 1;
         }
 
         .photo-card:hover::after {
             opacity: 1;
         }
 
-        /* ===== 响应式 ===== */
+        /* 响应式 */
         @media (max-width: 768px) {
-            .photo-grid {
-                gap: 1.2rem;
-            }
-
-            .photo-card .card-label {
-                bottom: 1rem;
-                left: 1rem;
-                font-size: 0.6rem;
-                padding: 0.3rem 0.8rem;
-            }
+            .photo-grid { gap: 1.2rem; }
+            .photo-card .card-label { bottom: 1rem; left: 1rem; font-size: 0.6rem; padding: 0.3rem 0.8rem; }
         }
 
         @media (max-width: 540px) {
-            .photo-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.8rem;
-            }
-
-            .photo-card {
-                aspect-ratio: 4 / 5;
-                border-radius: 12px;
-            }
-
-            .gallery-header {
-                margin-bottom: 2.5rem;
-            }
-
-            .gallery-header h1 {
-                letter-spacing: 0.1em;
-            }
+            .photo-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+            .photo-card { aspect-ratio: 4 / 5; border-radius: 12px; }
+            .gallery-header { margin-bottom: 2.5rem; }
         }
 
         @media (max-width: 400px) {
-            .photo-grid {
-                grid-template-columns: 1fr;
-                gap: 1.2rem;
-            }
-
-            .photo-card {
-                aspect-ratio: 4 / 5;
-                max-width: 380px;
-                margin: 0 auto;
-            }
-
-            body {
-                padding: 1rem;
-            }
+            .photo-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+            .photo-card { max-width: 380px; margin: 0 auto; }
+            body { padding: 1rem; }
         }
 
-        /* ===== 加载淡入动画 ===== */
+        /* 加载动画 */
         .photo-card {
             opacity: 0;
             animation: cardFadeIn 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
         }
-
-        .photo-card:nth-child(1) {
-            animation-delay: 0.10s;
-        }
-        .photo-card:nth-child(2) {
-            animation-delay: 0.25s;
-        }
-        .photo-card:nth-child(3) {
-            animation-delay: 0.40s;
-        }
-        .photo-card:nth-child(4) {
-            animation-delay: 0.55s;
-        }
+        .photo-card:nth-child(1) { animation-delay: 0.10s; }
+        .photo-card:nth-child(2) { animation-delay: 0.25s; }
+        .photo-card:nth-child(3) { animation-delay: 0.40s; }
+        .photo-card:nth-child(4) { animation-delay: 0.55s; }
 
         @keyframes cardFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.96);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* ===== 底部极简签名 ===== */
         .gallery-footer {
             text-align: center;
             margin-top: 3.5rem;
@@ -277,54 +248,72 @@
         }
 
         @media (max-width: 540px) {
-            .gallery-footer {
-                margin-top: 2rem;
-                padding-top: 1.5rem;
-                font-size: 0.6rem;
-            }
+            .gallery-footer { margin-top: 2rem; padding-top: 1.5rem; font-size: 0.6rem; }
         }
     </style>
 </head>
 <body>
     <div class="gallery-wrapper">
 
-        <!-- ====== 头部 ====== -->
         <header class="gallery-header">
             <div class="ornament"></div>
             <h1>四时 · <span>光影</span></h1>
             <p class="sub">片刻 · 静谧 · 叙事</p>
         </header>
 
-        <!-- ====== 照片网格 ====== -->
         <div class="photo-grid">
 
             <!-- 照片 1 -->
             <figure class="photo-card">
-                <img src="photos/001.jpg" alt="光影瞬间 01" loading="lazy" />
+                <img src="./photos/001.jpg" alt="光影瞬间 01" loading="lazy"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <!-- 占位提示（默认隐藏，图片加载失败时显示） -->
+                <div class="fallback-placeholder" style="display: none;">
+                    <span class="icon">🖼️</span>
+                    <span>无法加载图片</span>
+                    <span class="filename">photos/001.jpg</span>
+                </div>
                 <span class="card-label">01 · 晨</span>
             </figure>
 
             <!-- 照片 2 -->
             <figure class="photo-card">
-                <img src="photos/002.jpg" alt="光影瞬间 02" loading="lazy" />
+                <img src="./photos/002.jpg" alt="光影瞬间 02" loading="lazy"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="fallback-placeholder" style="display: none;">
+                    <span class="icon">🖼️</span>
+                    <span>无法加载图片</span>
+                    <span class="filename">photos/002.jpg</span>
+                </div>
                 <span class="card-label">02 · 昼</span>
             </figure>
 
             <!-- 照片 3 -->
             <figure class="photo-card">
-                <img src="photos/003.jpg" alt="光影瞬间 03" loading="lazy" />
+                <img src="./photos/003.jpg" alt="光影瞬间 03" loading="lazy"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="fallback-placeholder" style="display: none;">
+                    <span class="icon">🖼️</span>
+                    <span>无法加载图片</span>
+                    <span class="filename">photos/003.jpg</span>
+                </div>
                 <span class="card-label">03 · 暮</span>
             </figure>
 
             <!-- 照片 4 -->
             <figure class="photo-card">
-                <img src="photos/004.jpg" alt="光影瞬间 04" loading="lazy" />
+                <img src="./photos/004.jpg" alt="光影瞬间 04" loading="lazy"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="fallback-placeholder" style="display: none;">
+                    <span class="icon">🖼️</span>
+                    <span>无法加载图片</span>
+                    <span class="filename">photos/004.jpg</span>
+                </div>
                 <span class="card-label">04 · 夜</span>
             </figure>
 
         </div>
 
-        <!-- ====== 底部 ====== -->
         <div class="gallery-footer">
             ✦ 四时集 · 光影之间 ✦
         </div>
