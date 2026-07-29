@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>吃瓜中转站</title>
     <style>
-        /* ===== 全局重置 & 字体 ===== */
+        /* ===== 全局重置 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -13,311 +13,482 @@
         }
 
         body {
-            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0d0c0a;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-            padding: 2rem 1.5rem;
-            position: relative;
-            overflow-x: hidden;
+            padding: 1.5rem;
+            color: #e8e0d6;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 80% 60% at 20% 80%, rgba(180, 130, 80, 0.15) 0%, transparent 70%),
-                radial-gradient(ellipse 60% 50% at 80% 20%, rgba(200, 160, 110, 0.10) 0%, transparent 60%),
-                radial-gradient(ellipse 50% 40% at 50% 50%, rgba(120, 100, 70, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .gallery-wrapper {
-            position: relative;
-            z-index: 1;
-            max-width: 1280px;
+        .app {
             width: 100%;
+            max-width: 1000px;
         }
 
-        .gallery-header {
+        /* ===== 头部 ===== */
+        .header {
             text-align: center;
-            margin-bottom: 4rem;
-            position: relative;
+            margin-bottom: 2.5rem;
         }
-
-        .gallery-header .ornament {
+        .header .ornament {
             display: inline-block;
             width: 48px;
             height: 2px;
             background: linear-gradient(90deg, transparent, rgba(210, 180, 140, 0.6), transparent);
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
         }
-
-        .gallery-header h1 {
-            font-size: clamp(2rem, 5vw, 3.8rem);
+        .header h1 {
             font-weight: 300;
-            letter-spacing: 0.18em;
-            color: #e8e0d6;
-            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
-            margin-bottom: 0.5rem;
+            font-size: 2.4rem;
+            letter-spacing: 0.12em;
         }
-
-        .gallery-header h1 span {
+        .header h1 span {
             font-weight: 500;
             color: #d4c0a8;
         }
-
-        .gallery-header .sub {
-            font-size: clamp(0.8rem, 1.2vw, 1rem);
+        .header .sub {
+            font-size: 0.8rem;
             letter-spacing: 0.4em;
-            color: rgba(200, 185, 165, 0.5);
-            font-weight: 300;
+            color: rgba(200, 185, 165, 0.4);
             text-transform: uppercase;
             margin-top: 0.3rem;
         }
 
-        .photo-grid {
+        /* ===== 网格（一行两张） ===== */
+        .grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.8rem;
-            perspective: 1200px;
+            gap: 1.2rem;
         }
 
-        .photo-card {
+        .grid-item {
             position: relative;
-            border-radius: 18px;
+            border-radius: 16px;
             overflow: hidden;
-            background: #1a1714;
-            box-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.7),
-                0 0 0 1px rgba(255, 215, 175, 0.06) inset;
-            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
-                box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             aspect-ratio: 4 / 5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: default;
+            background: #1a1714;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
         }
-
-        .photo-card:hover {
-            transform: translateY(-10px) scale(1.01);
-            box-shadow:
-                0 30px 70px rgba(0, 0, 0, 0.8),
-                0 0 0 1px rgba(255, 215, 175, 0.15) inset;
-            z-index: 10;
+        .grid-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8);
         }
-
-        .photo-card img {
+        .grid-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
-            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-                filter 0.6s ease;
-            filter: brightness(0.92) saturate(1.05) contrast(1.02);
+            transition: filter 0.3s;
         }
-
-        .photo-card:hover img {
-            transform: scale(1.03);
-            filter: brightness(1.0) saturate(1.1) contrast(1.05);
+        .grid-item .label {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(230, 215, 195, 0.6);
+            background: rgba(10, 8, 6, 0.5);
+            backdrop-filter: blur(4px);
+            padding: 0.3rem 0.9rem;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 215, 175, 0.08);
+            pointer-events: none;
         }
-
-        /* ===== 图片加载失败时的占位样式 ===== */
-        .photo-card .fallback-placeholder {
+        .grid-item .fallback {
+            display: none;
             position: absolute;
             inset: 0;
-            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             background: #2a2520;
             color: rgba(200, 185, 165, 0.3);
-            font-size: 0.9rem;
-            letter-spacing: 0.1em;
-            padding: 1rem;
-            text-align: center;
-            border-radius: 18px;
+            font-size: 0.8rem;
         }
-
-        .photo-card .fallback-placeholder .icon {
-            font-size: 2.4rem;
-            margin-bottom: 0.6rem;
+        .grid-item .fallback .icon {
+            font-size: 2rem;
             opacity: 0.4;
         }
 
-        .photo-card .fallback-placeholder .filename {
-            color: rgba(200, 185, 165, 0.5);
-            font-size: 0.75rem;
-            background: rgba(0,0,0,0.3);
-            padding: 0.2rem 0.8rem;
-            border-radius: 30px;
-            font-family: monospace;
-        }
-
-        .photo-card .card-label {
-            position: absolute;
-            bottom: 1.5rem;
-            left: 1.5rem;
-            font-size: 0.7rem;
-            letter-spacing: 0.25em;
-            color: rgba(230, 215, 195, 0.5);
-            background: rgba(10, 8, 6, 0.4);
-            backdrop-filter: blur(6px);
-            padding: 0.4rem 1rem;
-            border-radius: 40px;
-            border: 1px solid rgba(255, 215, 175, 0.08);
-            font-weight: 300;
-            text-transform: uppercase;
-            transition: all 0.4s ease;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        .photo-card:hover .card-label {
-            color: rgba(230, 215, 195, 0.8);
-            background: rgba(10, 8, 6, 0.6);
-            border-color: rgba(255, 215, 175, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .photo-card::after {
-            content: '';
-            position: absolute;
+        /* ===== 全屏查看器 ===== */
+        .viewer {
+            display: none;
+            position: fixed;
             inset: 0;
-            border-radius: 18px;
-            background:
-                radial-gradient(circle at 30% 20%, rgba(255, 220, 170, 0.06) 0%, transparent 60%),
-                radial-gradient(circle at 70% 80%, rgba(200, 160, 120, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            transition: opacity 0.6s ease;
-            opacity: 0.6;
-            z-index: 1;
+            z-index: 1000;
+            background: rgba(8, 6, 5, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-
-        .photo-card:hover::after {
+        .viewer.active {
+            display: flex;
             opacity: 1;
         }
 
-        /* 响应式 */
-        @media (max-width: 768px) {
-            .photo-grid { gap: 1.2rem; }
-            .photo-card .card-label { bottom: 1rem; left: 1rem; font-size: 0.6rem; padding: 0.3rem 0.8rem; }
+        .viewer .close-btn {
+            position: absolute;
+            top: 1.8rem;
+            right: 1.8rem;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #d4c0a8;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .viewer .close-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.08);
         }
 
+        .viewer .slider {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            max-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: pan-y;
+        }
+
+        /* ---- 修改重点：图片容器和图片样式 ---- */
+        .viewer .slider .image-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #14110e;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+        }
+
+        .viewer .slider .image-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+            /* 保证完整显示，无裁剪 */;
+        }
+
+        .viewer .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d4c0a8;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: background 0.2s, opacity 0.2s;
+            opacity: 0.6;
+        }
+        .viewer .arrow:hover {
+            background: rgba(0, 0, 0, 0.6);
+            opacity: 1;
+        }
+        .viewer .arrow-left {
+            left: 1rem;
+        }
+        .viewer .arrow-right {
+            right: 1rem;
+        }
+
+        .viewer .counter {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(200, 185, 165, 0.5);
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 215, 175, 0.06);
+            pointer-events: none;
+        }
+
+        /* ===== 响应式 ===== */
         @media (max-width: 540px) {
-            .photo-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-            .photo-card { aspect-ratio: 4 / 5; border-radius: 12px; }
-            .gallery-header { margin-bottom: 2.5rem; }
+            .grid {
+                gap: 0.8rem;
+            }
+            .grid-item {
+                border-radius: 12px;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .viewer .arrow {
+                width: 36px;
+                height: 36px;
+                font-size: 1.2rem;
+            }
+            .viewer .arrow-left {
+                left: 0.3rem;
+            }
+            .viewer .arrow-right {
+                right: 0.3rem;
+            }
+            .viewer .close-btn {
+                top: 1rem;
+                right: 1rem;
+                width: 38px;
+                height: 38px;
+                font-size: 1.2rem;
+            }
         }
 
         @media (max-width: 400px) {
-            .photo-grid { grid-template-columns: 1fr; gap: 1.2rem; }
-            .photo-card { max-width: 380px; margin: 0 auto; }
-            body { padding: 1rem; }
+            .grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.6rem;
+            }
+            body {
+                padding: 0.8rem;
+            }
         }
 
-        /* 加载动画 */
-        .photo-card {
+        .grid-item {
             opacity: 0;
-            animation: cardFadeIn 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            animation: fadeIn 0.6s ease forwards;
         }
-        .photo-card:nth-child(1) { animation-delay: 0.10s; }
-        .photo-card:nth-child(2) { animation-delay: 0.25s; }
-        .photo-card:nth-child(3) { animation-delay: 0.40s; }
-        .photo-card:nth-child(4) { animation-delay: 0.55s; }
+        .grid-item:nth-child(1) { animation-delay: 0.05s; }
+        .grid-item:nth-child(2) { animation-delay: 0.12s; }
+        .grid-item:nth-child(3) { animation-delay: 0.19s; }
+        .grid-item:nth-child(4) { animation-delay: 0.26s; }
 
-        @keyframes cardFadeIn {
-            0% { opacity: 0; transform: translateY(30px) scale(0.96); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .gallery-footer {
-            text-align: center;
-            margin-top: 3.5rem;
-            font-size: 0.7rem;
-            letter-spacing: 0.3em;
-            color: rgba(180, 165, 145, 0.2);
-            font-weight: 300;
-            border-top: 1px solid rgba(255, 215, 175, 0.04);
-            padding-top: 2rem;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 540px) {
-            .gallery-footer { margin-top: 2rem; padding-top: 1.5rem; font-size: 0.6rem; }
+        .no-scroll {
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
-    <div class="gallery-wrapper">
-
-        <header class="gallery-header">
+    <div class="app">
+        <header class="header">
             <div class="ornament"></div>
-            <h1><span>吃瓜前线</span></h1>
+            <h1> <span>吃瓜前线</span></h1>
             <p class="sub">片刻 · 静谧 · 叙事</p>
         </header>
 
-        <div class="photo-grid">
-
-            <!-- 照片 1 -->
-            <figure class="photo-card">
-                <img src="./photos/001.jpg" alt="光影瞬间 01" loading="lazy"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <!-- 占位提示（默认隐藏，图片加载失败时显示） -->
-                <div class="fallback-placeholder" style="display: none;">
-                    <span class="icon">🖼️</span>
-                    <span>无法加载图片</span>
-                    <span class="filename">photos/001.jpg</span>
-                </div>
-                <span class="card-label">01 · 晨</span>
-            </figure>
-
-            <!-- 照片 2 -->
-            <figure class="photo-card">
-                <img src="./photos/002.jpg" alt="光影瞬间 02" loading="lazy"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <div class="fallback-placeholder" style="display: none;">
-                    <span class="icon">🖼️</span>
-                    <span>无法加载图片</span>
-                    <span class="filename">photos/002.jpg</span>
-                </div>
-                <span class="card-label">02 · 昼</span>
-            </figure>
-
-            <!-- 照片 3 -->
-            <figure class="photo-card">
-                <img src="./photos/003.jpg" alt="光影瞬间 03" loading="lazy"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <div class="fallback-placeholder" style="display: none;">
-                    <span class="icon">🖼️</span>
-                    <span>无法加载图片</span>
-                    <span class="filename">photos/003.jpg</span>
-                </div>
-                <span class="card-label">03 · 暮</span>
-            </figure>
-
-            <!-- 照片 4 -->
-            <figure class="photo-card">
-                <img src="./photos/004.jpg" alt="光影瞬间 04" loading="lazy"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <div class="fallback-placeholder" style="display: none;">
-                    <span class="icon">🖼️</span>
-                    <span>无法加载图片</span>
-                    <span class="filename">photos/004.jpg</span>
-                </div>
-                <span class="card-label">04 · 夜</span>
-            </figure>
-
-        </div>
-
-        <div class="gallery-footer">
-            ✦ 吃瓜中转站 ✦
-        </div>
-
+        <div class="grid" id="photoGrid"></div>
     </div>
+
+    <!-- ===== 查看器 ===== -->
+    <div class="viewer" id="viewer">
+        <button class="close-btn" id="closeViewer" aria-label="关闭">✕</button>
+        <div class="slider" id="slider">
+            <button class="arrow arrow-left" id="prevBtn" aria-label="上一张">‹</button>
+            <div class="image-wrapper" id="imageWrapper">
+                <img id="viewerImage" src="" alt="查看图片" />
+            </div>
+            <button class="arrow arrow-right" id="nextBtn" aria-label="下一张">›</button>
+        </div>
+        <div class="counter" id="counter">1 / 4</div>
+    </div>
+
+    <script>
+        (function() {
+            const photos = [
+                { src: './photos/001.jpg', label: '01 · 晨' },
+                { src: './photos/002.jpg', label: '02 · 昼' },
+                { src: './photos/003.jpg', label: '03 · 暮' },
+                { src: './photos/004.jpg', label: '04 · 夜' }
+            ];
+
+            const grid = document.getElementById('photoGrid');
+            const viewer = document.getElementById('viewer');
+            const viewerImage = document.getElementById('viewerImage');
+            const counter = document.getElementById('counter');
+            const closeBtn = document.getElementById('closeViewer');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            let currentIndex = 0;
+            let touchStartX = 0;
+            let touchEndX = 0;
+            let isSwiping = false;
+
+            function renderGrid() {
+                grid.innerHTML = '';
+                photos.forEach((photo, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'grid-item';
+                    item.dataset.index = index;
+
+                    const img = document.createElement('img');
+                    img.src = photo.src;
+                    img.alt = photo.label;
+                    img.loading = 'lazy';
+                    img.onerror = function() {
+                        this.style.display = 'none';
+                        const fallback = this.nextElementSibling;
+                        if (fallback && fallback.classList.contains('fallback')) {
+                            fallback.style.display = 'flex';
+                        }
+                    };
+
+                    const fallback = document.createElement('div');
+                    fallback.className = 'fallback';
+                    fallback.innerHTML = `
+                        <span class="icon">🖼️</span>
+                        <span>无法加载</span>
+                        <span style="font-size:0.6rem;opacity:0.5;margin-top:0.3rem;">${photo.src}</span>
+                    `;
+
+                    const label = document.createElement('span');
+                    label.className = 'label';
+                    label.textContent = photo.label;
+
+                    item.appendChild(img);
+                    item.appendChild(fallback);
+                    item.appendChild(label);
+
+                    item.addEventListener('click', function() {
+                        const idx = parseInt(this.dataset.index);
+                        openViewer(idx);
+                    });
+
+                    grid.appendChild(item);
+                });
+            }
+
+            function openViewer(index) {
+                if (index < 0) index = 0;
+                if (index >= photos.length) index = photos.length - 1;
+                currentIndex = index;
+                updateViewerImage();
+                viewer.classList.add('active');
+                document.body.classList.add('no-scroll');
+                touchStartX = 0;
+                touchEndX = 0;
+                isSwiping = false;
+            }
+
+            function closeViewer() {
+                viewer.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+            }
+
+            function updateViewerImage() {
+                const photo = photos[currentIndex];
+                viewerImage.src = photo.src;
+                viewerImage.alt = photo.label;
+                viewerImage.onerror = function() {
+                    this.alt = '图片加载失败';
+                };
+                counter.textContent = `${currentIndex + 1} / ${photos.length}`;
+            }
+
+            function goToPrev() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateViewerImage();
+                }
+            }
+
+            function goToNext() {
+                if (currentIndex < photos.length - 1) {
+                    currentIndex++;
+                    updateViewerImage();
+                }
+            }
+
+            // 事件绑定
+            closeBtn.addEventListener('click', closeViewer);
+            prevBtn.addEventListener('click', goToPrev);
+            nextBtn.addEventListener('click', goToNext);
+
+            document.addEventListener('keydown', function(e) {
+                if (!viewer.classList.contains('active')) return;
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    goToPrev();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    goToNext();
+                } else if (e.key === 'Escape') {
+                    closeViewer();
+                }
+            });
+
+            const slider = document.getElementById('slider');
+            slider.addEventListener('touchstart', function(e) {
+                const touch = e.touches[0];
+                touchStartX = touch.clientX;
+                touchEndX = touch.clientX;
+                isSwiping = true;
+            }, { passive: true });
+
+            slider.addEventListener('touchmove', function(e) {
+                if (!isSwiping) return;
+                const touch = e.touches[0];
+                touchEndX = touch.clientX;
+                const diff = touchEndX - touchStartX;
+                if (Math.abs(diff) > 10) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            slider.addEventListener('touchend', function(e) {
+                if (!isSwiping) return;
+                isSwiping = false;
+                const diff = touchEndX - touchStartX;
+                const threshold = 40;
+                if (Math.abs(diff) > threshold) {
+                    if (diff < 0) {
+                        goToNext();
+                    } else {
+                        goToPrev();
+                    }
+                }
+                touchStartX = 0;
+                touchEndX = 0;
+            }, { passive: true });
+
+            // 初始化
+            renderGrid();
+        })();
+    </script>
 </body>
 </html>
