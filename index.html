@@ -1,1 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱心动画</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: #111;
+            overflow: hidden;
+            font-family: "Microsoft Yahei", sans-serif;
+            position: relative;
+        }
+
+        /* 爱心轮廓标签 */
+        .heart-tag {
+            position: absolute;
+            padding: 5px 10px;
+            border-radius: 3px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+            opacity: 0;
+            transform: scale(0.6);
+            transition: all 0.25s ease-out;
+            z-index: 2;
+        }
+
+        .heart-tag.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* 满屏随机标签 */
+        .full-tag {
+            position: absolute;
+            padding: 3px 8px;
+            border-radius: 3px;
+            color: #fff;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+        }
+
+        .full-tag.show {
+            opacity: 0.8;
+        }
+
+        /* 爱心中间主标题 */
+        #center-title {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            padding: 12px 28px;
+            background: #ff69b4;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            z-index: 10;
+            transition: all 0.5s ease;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+            letter-spacing: 2px;
+        }
+
+        #center-title.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 动画容器 -->
+    <div id="heart-wrap"></div>
+    <div id="full-wrap"></div>
+    <div id="center-title">❤️李咏琳❤️</div>
+
+    <script>
+        const setting = {
+            heartSize: 14,
+            heartSpeed: 20,
+            fullCount: 260,
+            fullSpeed: 12,
+            texts: [
+                "好好吃饭", "按时睡觉", "天天开心", "我想你了", "喜欢你", "别熬夜",
+                "照顾自己", "保持好心情", "爱你", "想抱抱你", "早安", "晚安",
+                "多喝水", "注意身体", "要快乐", "平安喜乐", "万事胜意", "得偿所愿",
+                "岁岁平安", "前程似锦", "未来可期", "好运连连", "发财被爱", "一路生花",
+                "心想事成", "无忧无虑", "身体健康", "暴富暴美", "星河滚烫", "人间理想",
+                "温柔半两", "从容一生", "不负遇见", "不谈亏欠", "满心欢喜", "如约而至",
+                "万事顺意", "来日可期", "平安顺遂", "喜乐安康", "慢慢变好", "人间值得",
+                "万事皆宜", "百事从欢", "顺顺当当", "无忧无虑", "大展宏图", "步步高升",
+                "金榜题名", "桃花朵朵", "财源滚滚", "元气满满", "可可爱爱", "没有烦恼",
+                "携手余生", "朝夕相伴", "岁岁年年", "满心是你", "偏爱予你", "忠爱一生"
+            ],
+            colors: [
+                "#FFB6C1", "#FFC0CB", "#FF69B4", "#FF85A2",
+                "#98FB98", "#90EE90", "#7CCD7C", "#7FFFD4",
+                "#FFE4B5", "#FFDAB9", "#FFEFD5", "#FFFACD",
+                "#B0E0E6", "#ADD8E6", "#E6E6FA", "#DDA0DD"
+            ]
+        };
+
+        const heartWrap = document.getElementById("heart-wrap");
+        const fullWrap = document.getElementById("full-wrap");
+        const centerTitle = document.getElementById("center-title");
+
+        // 生成爱心坐标
+        function getHeartPoints(scale) {
+            const points = [];
+            for (let t = 0; t < 360; t += 2.5) {
+                const rad = t * Math.PI / 180;
+                const x = 16 * Math.pow(Math.sin(rad), 3);
+                const y = 13 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad);
+                points.push({
+                    x: Math.round(x * scale),
+                    y: Math.round(-y * scale)
+                });
+            }
+            return points;
+        }
+
+        // 随机取数组元素
+        function randomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        // 生成满屏标签
+        function createFullTags() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            for (let i = 0; i < setting.fullCount; i++) {
+                setTimeout(() => {
+                    const tag = document.createElement("div");
+                    tag.className = "full-tag";
+                    tag.textContent = randomItem(setting.texts);
+                    tag.style.background = randomItem(setting.colors);
+                    tag.style.left = Math.random() * (w - 80) + "px";
+                    tag.style.top = Math.random() * (h - 30) + "px";
+                    fullWrap.appendChild(tag);
+                    requestAnimationFrame(() => tag.classList.add("show"));
+                }, i * setting.fullSpeed);
+            }
+        }
+
+        // 播放爱心动画
+        function playHeart() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const points = getHeartPoints(setting.heartSize);
+
+            points.forEach((pos, index) => {
+                setTimeout(() => {
+                    const tag = document.createElement("div");
+                    tag.className = "heart-tag";
+                    tag.textContent = randomItem(setting.texts);
+                    tag.style.background = randomItem(setting.colors);
+                    tag.style.left = (centerX + pos.x) + "px";
+                    tag.style.top = (centerY + pos.y) + "px";
+                    heartWrap.appendChild(tag);
+                    requestAnimationFrame(() => tag.classList.add("show"));
+
+                    // 爱心画完后显示中间标题 + 铺满全屏
+                    if (index === points.length - 1) {
+                        setTimeout(() => {
+                            centerTitle.classList.add("show");
+                            createFullTags();
+                        }, 300);
+                    }
+                }, index * setting.heartSpeed);
+            });
+        }
+
+        // 页面加载直接开始动画
+        window.onload = playHeart;
+    </script>
+</body>
+</html>
