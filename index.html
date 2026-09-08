@@ -1,260 +1,549 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPDD 浪漫牵手</title>
-    <style>
-        body {
-            font-family: '微软雅黑', sans-serif;
-            margin: 0;
-            overflow: hidden; /* 隐藏滚动条 */
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fdfcfb 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #333;
-        }
 
-        /* 全屏爱心粒子背景 */
-        #heartCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
+<meta charset="UTF-8">
 
-        .card {
-            background: rgba(255, 255, 255, 0.9);
-            width: 340px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(255, 77, 148, 0.3);
-            overflow: hidden;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-            backdrop-filter: blur(5px);
-            border: 2px solid #fff;
-        }
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-        .card img {
-            width: 100%;
-            height: 350px;
-            object-fit: cover;
-            border-bottom: 2px solid #ffe6f0;
-        }
+<title>
+钟成林 ❤️ 白莲凤 爱情故事
+</title>
 
-        .info {
-            padding: 20px;
-        }
 
-        .name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #d63384;
-            margin-bottom: 10px;
-        }
+<style>
 
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-        .tag {
-            background: #ffe6f0;
-            color: #d63384;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-        }
 
-        .btn {
-            background: linear-gradient(45deg, #ff758c, #ff7eb3);
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 30px;
-            font-size: 18px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            box-shadow: 0 4px 15px rgba(255, 117, 140, 0.5);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+body{
 
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(255, 117, 140, 0.7);
-        }
+height:100vh;
 
-        /* 牵手成功区域 */
-        #success {
-            display: none;
-        }
+background:
+linear-gradient(135deg,#ffd1df,#fff);
 
-        #success img {
-            height: 280px;
-        }
+font-family:"微软雅黑";
 
-        .success-title {
-            font-size: 32px;
-            color: #d63384;
-            font-weight: 900;
-            margin: 20px 0 10px;
-            text-shadow: 2px 2px 0px #fff;
-            animation: bounceIn 0.8s;
-        }
+display:flex;
 
-        .success-sub {
-            font-size: 16px;
-            color: #555;
-            margin-bottom: 20px;
-        }
+justify-content:center;
 
-        /* 按钮置灰 */
-        .btn-disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
+align-items:center;
 
-        /* 小动画 */
-        @keyframes bounceIn {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-    </style>
+overflow:hidden;
+
+}
+
+
+
+canvas{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+z-index:0;
+
+}
+
+
+
+.card{
+
+
+width:360px;
+
+background:white;
+
+border-radius:25px;
+
+overflow:hidden;
+
+text-align:center;
+
+box-shadow:
+0 15px 40px #ff9bbd;
+
+z-index:2;
+
+}
+
+
+
+img{
+
+width:100%;
+
+height:380px;
+
+object-fit:cover;
+
+}
+
+
+
+.content{
+
+padding:25px;
+
+}
+
+
+
+h1{
+
+color:#ff4081;
+
+font-size:30px;
+
+}
+
+
+h2{
+
+color:#d63384;
+
+margin:15px;
+
+}
+
+
+
+p{
+
+color:#666;
+
+line-height:30px;
+
+}
+
+
+
+button{
+
+
+margin-top:20px;
+
+padding:15px 40px;
+
+border:0;
+
+border-radius:40px;
+
+background:
+
+linear-gradient(
+45deg,#ff4081,#ff9ec4
+);
+
+color:white;
+
+font-size:18px;
+
+
+}
+
+
+
+.page{
+
+display:none;
+
+}
+
+
+
+.page.active{
+
+display:block;
+
+animation:
+
+show .8s;
+
+}
+
+
+
+@keyframes show{
+
+from{
+
+opacity:0;
+
+transform:scale(.5);
+
+}
+
+
+to{
+
+opacity:1;
+
+transform:scale(1);
+
+}
+
+}
+
+
+
+video{
+
+width:90%;
+
+border-radius:20px;
+
+}
+
+
+</style>
+
+
 </head>
+
+
 <body>
 
-    <!-- 浪漫爱心粒子背景层 -->
-    <canvas id="heartCanvas"></canvas>
 
-    <div class="card">
-        <!-- 初始状态 -->
-        <div id="initial">
-            <img src="001.jpg" alt="求偶主角"> 
-            <div class="info">
-                <div class="name">寻找另一半</div>
-                <div class="tags">
-                    <span class="tag">稳重</span>
-                    <span class="tag">清爽穿搭</span>
-                    <span class="tag">浪漫深情</span>
-                    <span class="tag">真诚靠谱</span>
-                </div>
-                <p style="color:#666; margin-bottom: 20px;">期待遇到三观契合的你，一起步入婚姻殿堂。</p>
-                <a href="javascript:void(0)" class="btn" onclick="showSuccess()">💖 CPDD 滴滴我 💖</a>
-            </div>
-        </div>
 
-        <!-- 结婚场景展示区 -->
-        <div id="success">
-            <img src="002.jpg" alt="牵手成功">
-            <div class="success-title">💍 求婚成功！💍</div>
-            <div class="success-sub">执子之手，与子偕老。我们结婚啦！❤️</div>
-            <button class="btn btn-disabled" disabled>已牵手成功，幸福美满</button>
-        </div>
-    </div>
+<canvas id="heart"></canvas>
 
-    <script>
-        // 1. 点击切换逻辑
-        function showSuccess() {
-            var initial = document.getElementById("initial");
-            var success = document.getElementById("success");
-            initial.style.display = "none";
-            success.style.display = "block";
-            
-            // 点击后让爱心下得更猛烈一点！
-            increaseHeartRate();
-        }
 
-        // 2. 背景爱心粒子特效 (Canvas)
-        const canvas = document.getElementById('heartCanvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        let hearts = [];
-        let heartRate = 1; // 默认密度
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
+<div class="card">
 
-        // 爱心类
-        class Heart {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * -height; // 从顶部开始
-                this.size = Math.random() * 15 + 5;
-                this.speedY = Math.random() * 1.5 + 0.5;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.opacity = Math.random() * 0.5 + 0.3;
-                this.rotation = Math.random() * Math.PI * 2;
-                this.rotSpeed = (Math.random() - 0.5) * 0.05;
-                this.color = Math.random() > 0.5 ? '#ff4d6d' : '#ffb3c6';
-            }
-            
-            update() {
-                this.y += this.speedY;
-                this.x += this.speedX;
-                this.rotation += this.rotSpeed;
-                // 到底部后重置到顶部
-                if (this.y > height + 20) {
-                    this.y = -20;
-                    this.x = Math.random() * width;
-                }
-            }
 
-            draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.rotation);
-                ctx.globalAlpha = this.opacity;
-                ctx.fillStyle = this.color;
-                ctx.font = `${this.size}px Arial`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('❤', 0, 0);
-                ctx.restore();
-            }
-        }
+<!-- 第一阶段 -->
 
-        // 初始化爱心
-        function initHearts() {
-            hearts = [];
-            for (let i = 0; i < 50 * heartRate; i++) {
-                hearts.push(new Heart());
-            }
-        }
+<div id="page1"
+class="page active">
 
-        // 动画循环
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            hearts.forEach(heart => {
-                heart.update();
-                heart.draw();
-            });
-            requestAnimationFrame(animate);
-        }
 
-        // 增加浪漫度（点击后触发）
-        function increaseHeartRate() {
-            heartRate = 4; // 增加密度
-            initHearts();
-        }
+<img src="photos/001.jpg">
 
-        initHearts();
-        animate();
-    </script>
+
+<div class="content">
+
+
+<h1>
+💖 CPDD
+</h1>
+
+
+<h2>
+寻找另一半
+</h2>
+
+
+<p>
+
+稳重 ❤️
+
+<br>
+
+真诚 ❤️
+
+<br>
+
+浪漫 ❤️
+
+<br>
+
+期待遇见对的人
+
+</p>
+
+
+<button onclick="next(2)">
+
+💘 CPDD 滴滴我
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- 第二阶段 -->
+
+
+<div id="page2"
+class="page">
+
+
+<img src="photos/002.jpg">
+
+
+<div class="content">
+
+
+<h1>
+🤝 牵手成功
+</h1>
+
+
+<h2>
+钟成林 ❤️ 白莲凤
+</h2>
+
+
+<p>
+
+从陌生人
+
+<br>
+
+到最重要的人
+
+<br>
+
+我们的故事开始啦 ❤️
+
+</p>
+
+
+<button onclick="next(3)">
+
+💍 走向婚礼
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<!-- 第三阶段 -->
+
+
+<div id="page3"
+class="page">
+
+
+<img src="photos/003.jpg">
+
+
+<div class="content">
+
+
+<h1>
+
+💍 我们结婚啦
+
+</h1>
+
+
+<h2>
+
+执子之手 与子偕老
+
+</h2>
+
+
+
+<p>
+
+相遇：
+
+2026.9.8
+
+
+<br>
+
+
+婚礼：
+
+2026.9.8
+
+</p>
+
+
+
+<video controls>
+
+
+<source src="video/wedding.mp4">
+
+
+</video>
+
+
+
+<br>
+
+
+
+<audio controls autoplay loop>
+
+
+<source src="music/love.mp3">
+
+
+</audio>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<script>
+
+
+//页面切换
+
+
+function next(num){
+
+
+document.querySelectorAll(".page")
+.forEach(e=>{
+
+e.classList.remove("active");
+
+});
+
+
+document
+.getElementById("page"+num)
+.classList.add("active");
+
+}
+
+
+
+
+
+//爱心雨
+
+
+let c=document.getElementById("heart");
+
+let ctx=c.getContext("2d");
+
+
+function resize(){
+
+c.width=innerWidth;
+
+c.height=innerHeight;
+
+}
+
+
+resize();
+
+window.onresize=resize;
+
+
+
+let hearts=[];
+
+
+
+for(let i=0;i<100;i++){
+
+
+hearts.push({
+
+x:Math.random()*c.width,
+
+y:Math.random()*c.height,
+
+s:Math.random()*20+10,
+
+v:Math.random()*2+1
+
+});
+
+
+}
+
+
+
+
+function animate(){
+
+
+ctx.clearRect(
+0,
+0,
+c.width,
+c.height
+);
+
+
+
+hearts.forEach(h=>{
+
+
+ctx.font=h.s+"px Arial";
+
+ctx.fillStyle="#ff8fb8";
+
+
+ctx.fillText(
+"❤",
+h.x,
+h.y
+);
+
+
+h.y+=h.v;
+
+
+if(h.y>c.height)
+
+h.y=-20;
+
+
+});
+
+
+requestAnimationFrame(animate);
+
+
+}
+
+
+animate();
+
+
+
+</script>
+
+
+
 </body>
+
 </html>
