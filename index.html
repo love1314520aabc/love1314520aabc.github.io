@@ -1,877 +1,190 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>钟成林 ❤️ 白莲凤 婚礼邀请</title>
-
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-
-body{
-
-    height:100vh;
-
-    overflow:hidden;
-
-    font-family:"Microsoft YaHei";
-
-    background:
-    linear-gradient(
-    135deg,
-    #ffd6e7,
-    #fff5f8
-    );
-
-}
-
-
-
-canvas{
-
-    position:fixed;
-    left:0;
-    top:0;
-    width:100%;
-    height:100%;
-    z-index:0;
-
-}
-
-
-
-.page{
-
-    display:none;
-
-    position:absolute;
-
-    width:100%;
-
-    height:100%;
-
-    justify-content:center;
-
-    align-items:center;
-
-    text-align:center;
-
-    z-index:5;
-
-}
-
-
-.page.active{
-
-    display:flex;
-
-}
-
-
-
-.card{
-
-    width:360px;
-
-    background:white;
-
-    border-radius:25px;
-
-    padding:25px;
-
-    box-shadow:
-
-    0 10px 40px
-
-    rgba(255,80,130,.3);
-
-}
-
-
-
-.photo{
-
-    width:100%;
-
-    height:330px;
-
-    object-fit:cover;
-
-    border-radius:20px;
-
-}
-
-
-
-h1{
-
-    margin:20px 0;
-
-    color:#e91e63;
-
-    font-size:30px;
-
-}
-
-
-
-.text{
-
-    color:#666;
-
-    line-height:30px;
-
-    font-size:17px;
-
-}
-
-
-
-button{
-
-    margin-top:20px;
-
-    padding:15px 40px;
-
-    border:none;
-
-    border-radius:40px;
-
-    background:
-
-    linear-gradient(
-    45deg,
-    #ff4d88,
-    #ff9ab8
-    );
-
-    color:white;
-
-    font-size:18px;
-
-    cursor:pointer;
-
-}
-
-
-
-.backBtn{
-
-    background:white;
-
-    color:#e91e63;
-
-    border:2px solid #ff9ab8;
-
-    margin-top:15px;
-
-}
-
-
-
-.names{
-
-    font-size:28px;
-
-    color:#e91e63;
-
-    font-weight:bold;
-
-}
-
-
-
-.heart{
-
-    font-size:45px;
-
-    animation:pulse 1s infinite;
-
-}
-
-
-
-@keyframes pulse{
-
-50%{
-
-transform:scale(1.3);
-
-}
-
-}
-
-
-
-.final{
-
-    font-size:32px;
-
-    color:#e91e63;
-
-    font-weight:bold;
-
-    margin-top:20px;
-
-}
-
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱心动画</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: #111;
+            overflow: hidden;
+            font-family: "Microsoft Yahei", sans-serif;
+            position: relative;
+        }
+
+        /* 爱心轮廓标签 */
+        .heart-tag {
+            position: absolute;
+            padding: 5px 10px;
+            border-radius: 3px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+            opacity: 0;
+            transform: scale(0.6);
+            transition: all 0.25s ease-out;
+            z-index: 2;
+        }
+
+        .heart-tag.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* 满屏随机标签 */
+        .full-tag {
+            position: absolute;
+            padding: 3px 8px;
+            border-radius: 3px;
+            color: #fff;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+        }
+
+        .full-tag.show {
+            opacity: 0.8;
+        }
+
+        /* 爱心中间主标题 */
+        #center-title {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            padding: 12px 28px;
+            background: #ff69b4;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            z-index: 10;
+            transition: all 0.5s ease;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+            letter-spacing: 2px;
+        }
+
+        #center-title.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+    </style>
 </head>
-
-
 <body>
-
-
-<!-- 音乐 -->
-
-<audio id="loveMusic">
-
-<source src="music/zanmenjiehunba.mp3" type="audio/mp3">
-
-</audio>
-
-
-
-<canvas id="heart"></canvas>
-
-
-
-
-<!-- 第1页 CPDD -->
-
-
-<div class="page active" id="page1">
-
-
-<div class="card">
-
-
-<img class="photo" src="photos/001.jpg">
-
-
-
-<div class="names">
-
-钟成林 ❤️ 白莲凤
-
-</div>
-
-
-
-<h1>
-
-💖 CPDD
-
-</h1>
-
-
-
-<div class="text">
-
-期待遇见最好的你<br>
-
-一起走向幸福婚姻殿堂
-
-<br><br>
-
-2026.9.8
-
-</div>
-
-
-
-<button onclick="startLove()">
-
-💘 CPDD 滴滴我
-
-</button>
-
-
-</div>
-
-</div>
-
-
-
-
-
-<!-- 第2页 牵手成功 -->
-
-
-<div class="page" id="page2">
-
-
-<div class="card">
-
-
-<img class="photo" src="photos/002.jpg">
-
-
-
-<div class="heart">
-
-❤️
-
-</div>
-
-
-
-<h1>
-
-牵手成功
-
-</h1>
-
-
-
-<div class="text">
-
-从认识到相爱
-
-<br>
-
-从心动到陪伴
-
-<br>
-
-我们终于遇见彼此
-
-</div>
-
-
-
-<button onclick="goWedding()">
-
-💍 进入婚礼现场
-
-</button>
-
-
-<br>
-
-
-<button class="backBtn" onclick="backPage(1)">
-
-⬅ 返回CPDD
-
-</button>
-
-
-</div>
-
-</div><!-- 第3页 婚礼现场 -->
-
-<div class="page" id="page3">
-
-
-<div class="card">
-
-
-<img class="photo" src="photos/002.jpg">
-
-
-
-<div class="heart">
-
-💍
-
-</div>
-
-
-
-<h1>
-
-我们结婚啦！
-
-</h1>
-
-
-
-
-<div class="final">
-
-钟成林 ❤️ 白莲凤
-
-</div>
-
-
-
-
-<div class="text">
-
-执子之手
-
-<br>
-
-与子偕老
-
-<br><br>
-
-2026年9月8日
-
-<br><br>
-
-愿余生都是你 ❤️
-
-</div>
-
-
-
-<button class="backBtn" onclick="backPage(2)">
-
-⬅ 返回牵手成功
-
-</button>
-
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-<script>
-
-
-// 页面切换
-
-function showPage(num){
-
-
-document.querySelectorAll(".page").forEach(function(p){
-
-p.classList.remove("active");
-
-});
-
-
-document.getElementById("page"+num)
-.classList.add("active");
-
-
-}
-
-
-
-
-// 返回上一页
-
-function backPage(num){
-
-showPage(num);
-
-}
-
-
-
-
-
-
-// 点击CPDD
-
-function startLove(){
-
-
-let music=document.getElementById("loveMusic");
-
-
-music.volume=0.7;
-
-
-music.play();
-
-
-
-showPage(2);
-
-
-
-for(let i=0;i<30;i++){
-
-createPetal();
-
-}
-
-
-}
-
-
-
-
-
-// 进入婚礼
-
-function goWedding(){
-
-
-showPage(3);
-
-
-
-firework();
-
-
-setTimeout(function(){
-
-firework();
-
-},800);
-
-
-
-setTimeout(function(){
-
-firework();
-
-},1600);
-
-
-
-}
-
-
-
-
-
-
-
-// 爱心背景
-
-
-let canvas=document.getElementById("heart");
-
-
-let ctx=canvas.getContext("2d");
-
-
-
-function resize(){
-
-
-canvas.width=window.innerWidth;
-
-canvas.height=window.innerHeight;
-
-
-}
-
-
-resize();
-
-
-window.onresize=resize;
-
-
-
-let hearts=[];
-
-
-
-class Heart{
-
-
-constructor(){
-
-
-this.x=Math.random()*canvas.width;
-
-this.y=Math.random()*canvas.height;
-
-this.size=Math.random()*20+10;
-
-this.speed=Math.random()*2+1;
-
-
-}
-
-
-
-update(){
-
-
-this.y+=this.speed;
-
-
-if(this.y>canvas.height){
-
-
-this.y=-20;
-
-this.x=Math.random()*canvas.width;
-
-
-}
-
-
-}
-
-
-
-draw(){
-
-
-ctx.font=this.size+"px Arial";
-
-ctx.fillStyle="#ff7aa8";
-
-ctx.fillText(
-"❤",
-this.x,
-this.y
-);
-
-
-}
-
-
-
-}
-
-
-
-
-
-for(let i=0;i<80;i++){
-
-
-hearts.push(new Heart());
-
-
-}
-
-
-
-
-
-function animate(){
-
-
-ctx.clearRect(
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-
-
-hearts.forEach(function(h){
-
-
-h.update();
-
-h.draw();
-
-
-});
-
-
-requestAnimationFrame(animate);
-
-
-}
-
-
-
-animate();
-
-
-
-
-
-
-
-// 花瓣效果
-
-
-function createPetal(){
-
-
-
-let p=document.createElement("div");
-
-
-p.innerHTML="🌸";
-
-
-p.style.position="fixed";
-
-
-p.style.left=Math.random()*100+"%";
-
-
-p.style.top="-30px";
-
-
-p.style.fontSize="25px";
-
-
-p.style.zIndex="20";
-
-
-p.style.animation="fall 5s linear";
-
-
-
-document.body.appendChild(p);
-
-
-
-setTimeout(function(){
-
-p.remove();
-
-},5000);
-
-
-}
-
-
-
-
-
-let style=document.createElement("style");
-
-
-style.innerHTML=`
-
-@keyframes fall{
-
-
-0%{
-
-transform:
-translateY(0)
-rotate(0deg);
-
-}
-
-
-100%{
-
-transform:
-translateY(110vh)
-rotate(360deg);
-
-}
-
-}
-
-`;
-
-document.head.appendChild(style);
-
-
-
-
-
-
-// 烟花效果
-
-
-function firework(){
-
-
-
-for(let i=0;i<50;i++){
-
-
-let s=document.createElement("div");
-
-
-s.innerHTML="✨";
-
-
-s.style.position="fixed";
-
-s.style.left="50%";
-
-s.style.top="50%";
-
-s.style.fontSize="30px";
-
-s.style.zIndex="30";
-
-
-
-let x=(Math.random()-0.5)*600;
-
-
-let y=(Math.random()-0.5)*600;
-
-
-
-s.animate([
-
-{
-
-transform:"translate(0,0)",
-
-opacity:1
-
-},
-
-{
-
-transform:`translate(${x}px,${y}px)`,
-
-opacity:0
-
-}
-
-],{
-
-
-duration:1500
-
-
-});
-
-
-
-document.body.appendChild(s);
-
-
-
-setTimeout(function(){
-
-s.remove();
-
-
-},1500);
-
-
-
-}
-
-
-
-}
-
-
-
-</script>
-
-
-
+    <!-- 动画容器 -->
+    <div id="heart-wrap"></div>
+    <div id="full-wrap"></div>
+    <div id="center-title">雷杰楠❤️李咏琳</div>
+
+    <script>
+        const setting = {
+            heartSize: 14,
+            heartSpeed: 20,
+            fullCount: 260,
+            fullSpeed: 12,
+            texts: [
+                "好好吃饭", "按时睡觉", "天天开心", "我想你了", "喜欢你", "别熬夜",
+                "照顾自己", "保持好心情", "爱你", "想抱抱你", "早安", "晚安",
+                "多喝水", "注意身体", "要快乐", "平安喜乐", "万事胜意", "得偿所愿",
+                "岁岁平安", "前程似锦", "未来可期", "好运连连", "发财被爱", "一路生花",
+                "心想事成", "无忧无虑", "身体健康", "暴富暴美", "星河滚烫", "人间理想",
+                "温柔半两", "从容一生", "不负遇见", "不谈亏欠", "满心欢喜", "如约而至",
+                "万事顺意", "来日可期", "平安顺遂", "喜乐安康", "慢慢变好", "人间值得",
+                "万事皆宜", "百事从欢", "顺顺当当", "无忧无虑", "大展宏图", "步步高升",
+                "金榜题名", "桃花朵朵", "财源滚滚", "元气满满", "可可爱爱", "没有烦恼",
+                "携手余生", "朝夕相伴", "岁岁年年", "满心是你", "偏爱予你", "忠爱一生"
+            ],
+            colors: [
+                "#FFB6C1", "#FFC0CB", "#FF69B4", "#FF85A2",
+                "#98FB98", "#90EE90", "#7CCD7C", "#7FFFD4",
+                "#FFE4B5", "#FFDAB9", "#FFEFD5", "#FFFACD",
+                "#B0E0E6", "#ADD8E6", "#E6E6FA", "#DDA0DD"
+            ]
+        };
+
+        const heartWrap = document.getElementById("heart-wrap");
+        const fullWrap = document.getElementById("full-wrap");
+        const centerTitle = document.getElementById("center-title");
+
+        // 生成爱心坐标
+        function getHeartPoints(scale) {
+            const points = [];
+            for (let t = 0; t < 360; t += 2.5) {
+                const rad = t * Math.PI / 180;
+                const x = 16 * Math.pow(Math.sin(rad), 3);
+                const y = 13 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad);
+                points.push({
+                    x: Math.round(x * scale),
+                    y: Math.round(-y * scale)
+                });
+            }
+            return points;
+        }
+
+        // 随机取数组元素
+        function randomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        // 生成满屏标签
+        function createFullTags() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            for (let i = 0; i < setting.fullCount; i++) {
+                setTimeout(() => {
+                    const tag = document.createElement("div");
+                    tag.className = "full-tag";
+                    tag.textContent = randomItem(setting.texts);
+                    tag.style.background = randomItem(setting.colors);
+                    tag.style.left = Math.random() * (w - 80) + "px";
+                    tag.style.top = Math.random() * (h - 30) + "px";
+                    fullWrap.appendChild(tag);
+                    requestAnimationFrame(() => tag.classList.add("show"));
+                }, i * setting.fullSpeed);
+            }
+        }
+
+        // 播放爱心动画
+        function playHeart() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const points = getHeartPoints(setting.heartSize);
+
+            points.forEach((pos, index) => {
+                setTimeout(() => {
+                    const tag = document.createElement("div");
+                    tag.className = "heart-tag";
+                    tag.textContent = randomItem(setting.texts);
+                    tag.style.background = randomItem(setting.colors);
+                    tag.style.left = (centerX + pos.x) + "px";
+                    tag.style.top = (centerY + pos.y) + "px";
+                    heartWrap.appendChild(tag);
+                    requestAnimationFrame(() => tag.classList.add("show"));
+
+                    // 爱心画完后显示中间标题 + 铺满全屏
+                    if (index === points.length - 1) {
+                        setTimeout(() => {
+                            centerTitle.classList.add("show");
+                            createFullTags();
+                        }, 300);
+                    }
+                }, index * setting.heartSpeed);
+            });
+        }
+
+        // 页面加载直接开始动画
+        window.onload = playHeart;
+    </script>
 </body>
-
 </html>
